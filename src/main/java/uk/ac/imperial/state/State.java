@@ -3,7 +3,7 @@ package uk.ac.imperial.state;
 import java.util.Collection;
 
 /**
- * Represents the state of a Petri net
+ * Represents the state of a Petri net in the Markov Chain
  * For each place it will contain the number of tokens stored
  * E.g
  * At a given point in time if the following places contain the following tokens:

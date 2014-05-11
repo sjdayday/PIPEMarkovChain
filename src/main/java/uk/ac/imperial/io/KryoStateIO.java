@@ -23,6 +23,12 @@ public class KryoStateIO implements StateWriter, StateReader {
 
     private Kryo kryo = new Kryo();
 
+    /**
+     * Constructor
+     *
+     * Registers commonly used classes to improve efficiency
+     * of writing a class name during writeTransitions
+     */
     public KryoStateIO() {
         kryo.register(HashedState.class);
         kryo.register(HashedClassifiedState.class);

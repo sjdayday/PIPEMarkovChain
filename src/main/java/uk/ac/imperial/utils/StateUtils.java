@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Utility class for building states from Json strings
+ */
 public class StateUtils {
 
     private StateUtils() {}

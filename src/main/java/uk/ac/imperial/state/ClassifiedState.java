@@ -9,5 +9,9 @@ package uk.ac.imperial.state;
  * and is known as vanishing because the transition will happen immediately.
  */
 public interface ClassifiedState extends State {
+    /**
+     *
+     * @return true if the state is tangible
+     */
     boolean isTangible();
 }
