@@ -50,14 +50,29 @@ public class KryoStateIO implements StateWriter, StateReader {
      * @param output Kryo output to write to
      */
     @Override
-    public void writeTransitions(ClassifiedState state, Map<ClassifiedState, Double> successors, Output output) {
+    public void writeTransitions(int state, Map<Integer, Double> successors, Output output) {
         kryo.writeObject(output, state);
         kryo.writeObject(output, successors.size());
-        for (Map.Entry<ClassifiedState, Double> entry : successors.entrySet()) {
+        for (Map.Entry<Integer, Double> entry : successors.entrySet()) {
             kryo.writeObject(output, entry.getKey());
             kryo.writeObject(output, entry.getValue());
         }
     }
+
+    /**
+     * Writes the state and state id to the output in the order
+     *   - State
+     *   - id
+     * @param state
+     * @param stateId
+     * @param output
+     */
+    @Override
+    public void writeState(ClassifiedState state, int stateId, Output output) {
+        kryo.writeObject(output, stateId);
+        kryo.writeObject(output, state);
+    }
+
     /**
      *
      * Reads:
@@ -72,14 +87,29 @@ public class KryoStateIO implements StateWriter, StateReader {
      */
     @Override
     public Record readRecord(Input input) {
-        HashedClassifiedState state = kryo.readObject(input, HashedClassifiedState.class);
+        Integer state = kryo.readObject(input, Integer.class);
         int successors = kryo.readObject(input, Integer.class);
-        Map<ClassifiedState, Double> successorRates = new HashMap<>();
+        Map<Integer, Double> successorRates = new HashMap<>();
         for (int i = 0; i < successors; i++) {
-            ClassifiedState successor = kryo.readObject(input, HashedClassifiedState.class);
+            Integer successor = kryo.readObject(input, Integer.class);
             Double rate = kryo.readObject(input, Double.class);
             successorRates.put(successor, rate);
         }
         return new Record(state, successorRates);
+    }
+
+    /**
+     *
+     * Reads a single state mapping from the input stream. They are read in the order
+     * that the method writeState writes them out.
+     *
+     * @param inputStream
+     * @return state mapping of id to actual state object
+     */
+    @Override
+    public StateMapping readState(Input inputStream) {
+        Integer id = kryo.readObject(inputStream, Integer.class);
+        ClassifiedState state = kryo.readObject(inputStream, HashedClassifiedState.class);
+        return new StateMapping(state, id);
     }
 }

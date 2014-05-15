@@ -15,6 +15,13 @@ public interface StateWriter {
      * @param state
      * @param successors
      */
-    public void writeTransitions(ClassifiedState state, Map<ClassifiedState, Double> successors, Output output);
+    public void writeTransitions(int state, Map<Integer, Double> successors, Output output);
 
+    /**
+     * Logs state to state id in output
+     * @param state
+     * @param stateId
+     * @param stateOutput
+     */
+    void writeState(ClassifiedState state, int stateId, Output stateOutput);
 }

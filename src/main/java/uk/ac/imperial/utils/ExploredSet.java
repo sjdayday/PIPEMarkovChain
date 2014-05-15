@@ -32,7 +32,7 @@ public class ExploredSet {
     /**
      * Array to store LinkedList of HashCode in. This is the underlying 'Set' structure
      */
-    private final List<LinkedList<HashCode>> array;
+    private final List<LinkedList<StateEntry>> array;
 
     /**
      * 32 bit hash function
@@ -72,7 +72,7 @@ public class ExploredSet {
         this.size = size;
         array = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
-            array.add(new LinkedList<HashCode>());
+            array.add(new LinkedList<StateEntry>());
         }
         this.placeOrdering = new LinkedList<>(placeOrdering);
     }
@@ -84,11 +84,11 @@ public class ExploredSet {
      * The second hash is stored for the object equality
      * @param state
      */
-    public void add(ClassifiedState state) {
+    public void add(ClassifiedState state, int id) {
         int location = getLocation(state);
         HashCode value = hashTwo(state);
-        LinkedList<HashCode> list = array.get(location);
-        list.add(value);
+        LinkedList<StateEntry> list = array.get(location);
+        list.add(new StateEntry(value, id));
     }
 
     /**
@@ -96,10 +96,13 @@ public class ExploredSet {
      * Compresses states and adds them to the explored data structure
      *
      * @param states all states that have been explored
+     * @param ids all matching ids for the states
      */
-    public void addAll(Collection<ClassifiedState> states) {
+    public void addAll(Collection<ClassifiedState> states, List<Integer> ids) {
+        int i = 0;
         for (ClassifiedState state : states) {
-            add(state);
+            add(state, ids.get(i));
+            i++;
         }
     }
 
@@ -117,8 +120,8 @@ public class ExploredSet {
             throw new RuntimeException("Cannot combine sets with different sized arrays. Due to compression here is no item to reconstruct hashcode from!");
         }
         for (int i = 0; i < exploredSet.array.size(); i++) {
-            List<HashCode> theirs = exploredSet.array.get(i);
-            List<HashCode> ours = array.get(i % size);
+            List<StateEntry> theirs = exploredSet.array.get(i);
+            List<StateEntry> ours = array.get(i % size);
             ours.addAll(theirs);
         }
     }
@@ -142,8 +145,8 @@ public class ExploredSet {
     public boolean contains(ClassifiedState state) {
         int location = getLocation(state);
         HashCode value = hashTwo(state);
-        List<HashCode> list = array.get(location);
-        return list.contains(value);
+        List<StateEntry> list = array.get(location);
+        return list.contains(new StateEntry(value));
     }
 
 
@@ -163,8 +166,72 @@ public class ExploredSet {
     }
 
     public void clear() {
-        for (List<HashCode> list : array) {
+        for (List<StateEntry> list : array) {
             list.clear();
         }
+    }
+
+    /**
+     *
+     * @param state
+     * @return the unique id given to this state
+     */
+    public int getId(ClassifiedState state) {
+        int location = getLocation(state);
+        List<StateEntry> list = array.get(location);
+        HashCode value = hashTwo(state);
+        int index = list.indexOf(new StateEntry(value));
+        return list.get(index).id;
+
+    }
+
+    private class StateEntry {
+        private StateEntry(HashCode hashCode, int id) {
+            this.hashCode = hashCode;
+            this.id = id;
+        }
+
+        /**
+         * Constructor used when asking if the set contains this object
+         * since equality is done via the hashcode only.
+         * @param hashCode
+         */
+        private StateEntry(HashCode hashCode) {
+            this.hashCode = hashCode;
+            this.id = 0;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof StateEntry)) {
+                return false;
+            }
+
+            StateEntry that = (StateEntry) o;
+
+            if (!hashCode.equals(that.hashCode)) {
+                return false;
+            }
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            return hashCode.hashCode();
+        }
+
+        /**
+         * Second hash of a state used to identify equality
+         */
+        public final HashCode hashCode;
+
+        /**
+         * Unique id meta data for each state
+         */
+        public final int id;
     }
 }

@@ -20,29 +20,35 @@ public class StateIOProcessorTest {
     private Output output;
 
     @Mock
+    private Output stateOutput;
+
+    @Mock
     private StateWriter writer;
 
     @Mock
     private ClassifiedState state;
 
-    @Mock
-    private ClassifiedState successor;
-
-    private Map<ClassifiedState, Double> successors;
+    private Map<Integer, Double> successors;
 
     private StateIOProcessor processor;
 
     @Before
     public void setUp() {
         successors = new HashMap<>();
-        successors.put(successor, 1.4);
-        processor = new StateIOProcessor(writer, output);
+        successors.put(2, 1.4);
+        processor = new StateIOProcessor(writer, output, stateOutput);
     }
 
     @Test
     public void writesToStateWriter() {
-        processor.processTransitions(state, successors);
-        verify(writer).writeTransitions(state, successors, output);
+        processor.processTransitions(1, successors);
+        verify(writer).writeTransitions(1, successors, output);
+    }
+
+    @Test
+    public void writesStateToWriter() {
+        processor.processState(state, 1);
+        verify(writer).writeState(state, 1, stateOutput);
     }
 
 }

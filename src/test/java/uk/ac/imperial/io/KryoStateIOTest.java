@@ -27,22 +27,22 @@ public class KryoStateIOTest {
 
     @Test
     public void singleSuccessor() throws IOException {
-        ClassifiedState state =
-                StateUtils.tangibleStateFromJson("{\"P0\": {\"Default\": 1}, \"P1\": {\"Default\": 0}}");
-        ClassifiedState successor =
-                StateUtils.tangibleStateFromJson("{\"P0\": {\"Default\": 0}, \"P1\": {\"Default\": 1}}");
-        Map<ClassifiedState, Double> successors = new HashMap<>();
-        successors.put(successor, 1.0);
+//        ClassifiedState state =
+//                StateUtils.tangibleStateFromJson("{\"P0\": {\"Default\": 1}, \"P1\": {\"Default\": 0}}");
+//        ClassifiedState successor =
+//                StateUtils.tangibleStateFromJson("{\"P0\": {\"Default\": 0}, \"P1\": {\"Default\": 1}}");
+        Map<Integer, Double> successors = new HashMap<>();
+        successors.put(2, 1.0);
 
         try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
             try  (Output outputStream = new Output(stream)) {
-                io.writeTransitions(state, successors, outputStream);
+                io.writeTransitions(1, successors, outputStream);
             }
             try (ByteArrayInputStream s = new ByteArrayInputStream(stream.toByteArray());
                  Input inputStream = new Input(s)) {
                 Record record = io.readRecord(inputStream);
 
-                assertEquals(state, record.state);
+                assertEquals(1, record.state);
                 assertEquals(successors, record.successors);
             }
         }
@@ -50,26 +50,44 @@ public class KryoStateIOTest {
 
     @Test
     public void doubleSuccessor() throws IOException {
-        ClassifiedState state =
-                StateUtils.tangibleStateFromJson("{\"P0\": {\"Default\": 2}, \"P1\": {\"Default\": 0}}");
-        ClassifiedState successor1 =
-                StateUtils.tangibleStateFromJson("{\"P0\": {\"Default\": 1}, \"P1\": {\"Default\": 1}}");
-        ClassifiedState successor2 =
-                StateUtils.tangibleStateFromJson("{\"P0\": {\"Default\": 0}, \"P1\": {\"Default\": 2}}");
-        Map<ClassifiedState, Double> successors = new HashMap<>();
-        successors.put(successor1, 1.0);
-        successors.put(successor2, 2.0);
+//        ClassifiedState state =
+//                StateUtils.tangibleStateFromJson("{\"P0\": {\"Default\": 2}, \"P1\": {\"Default\": 0}}");
+//        ClassifiedState successor1 =
+//                StateUtils.tangibleStateFromJson("{\"P0\": {\"Default\": 1}, \"P1\": {\"Default\": 1}}");
+//        ClassifiedState successor2 =
+//                StateUtils.tangibleStateFromJson("{\"P0\": {\"Default\": 0}, \"P1\": {\"Default\": 2}}");
+        Map<Integer, Double> successors = new HashMap<>();
+        successors.put(2, 1.0);
+        successors.put(3, 2.0);
 
         try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
             try  (Output outputStream = new Output(stream)) {
-                io.writeTransitions(state, successors, outputStream);
+                io.writeTransitions(1, successors, outputStream);
             }
             try (ByteArrayInputStream s = new ByteArrayInputStream(stream.toByteArray());
                  Input inputStream = new Input(s)) {
                 Record record = io.readRecord(inputStream);
 
-                assertEquals(state, record.state);
+                assertEquals(1, record.state);
                 assertEquals(successors, record.successors);
+            }
+        }
+    }
+
+    @Test
+    public void writesState() throws IOException {
+        ClassifiedState state =
+            StateUtils.tangibleStateFromJson("{\"P0\": {\"Default\": 1}, \"P1\": {\"Default\": 0}}");
+        try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
+            try  (Output outputStream = new Output(stream)) {
+                io.writeState(state, 1, outputStream);
+            }
+            try (ByteArrayInputStream s = new ByteArrayInputStream(stream.toByteArray());
+                 Input inputStream = new Input(s)) {
+                StateMapping mapping = io.readState(inputStream);
+
+                assertEquals(1, mapping.id);
+                assertEquals(state, mapping.state);
             }
         }
     }

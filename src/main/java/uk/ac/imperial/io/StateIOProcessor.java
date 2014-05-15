@@ -11,16 +11,23 @@ import java.util.Map;
 public class StateIOProcessor implements StateProcessor {
     private final StateWriter writer;
 
-    private final Output output;
+    private final Output transitionOutput;
+    private Output stateOutput;
 
 
-    public StateIOProcessor(StateWriter writer, Output output) {
+    public StateIOProcessor(StateWriter writer, Output transitionOutput, Output stateOutput) {
         this.writer = writer;
-        this.output = output;
+        this.transitionOutput = transitionOutput;
+        this.stateOutput = stateOutput;
     }
 
     @Override
-    public void processTransitions(ClassifiedState state, Map<ClassifiedState, Double> successorRates) {
-        writer.writeTransitions(state, successorRates, output);
+    public void processTransitions(int stateId, Map<Integer, Double> successorRates) {
+        writer.writeTransitions(stateId, successorRates, transitionOutput);
+    }
+
+    @Override
+    public void processState(ClassifiedState state, int stateId) {
+        writer.writeState(state, stateId, stateOutput);
     }
 }

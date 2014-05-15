@@ -12,4 +12,12 @@ public interface StateReader {
      * @return Record containing a state and all its successors
      */
     public Record readRecord(Input input);
+
+    /**
+     * Reads a single state mapping from the input
+     *
+     * @param inputStream
+     * @return object containing the id and the state
+     */
+    StateMapping readState(Input inputStream);
 }

@@ -46,14 +46,14 @@ public class ExploredSetTest {
     @Test
     public void containsExactItem() {
         set = new ExploredSet(10, Arrays.asList("P1", "P2"));
-        set.add(explorerState);
+        set.add(explorerState, 1);
         assertTrue(set.contains(explorerState));
     }
 
     @Test
     public void containsDuplicateItem() {
         set = new ExploredSet(10, Arrays.asList("P1", "P2"));
-        set.add(explorerState);
+        set.add(explorerState, 1);
         ClassifiedState sameState = createState(1, 2);
         assertTrue(set.contains(sameState));
     }
@@ -61,7 +61,7 @@ public class ExploredSetTest {
     @Test
     public void containsDuplicateItemOppositeOrderHashMap() {
         set = new ExploredSet(10, Arrays.asList("P1", "P2"));
-        set.add(explorerState);
+        set.add(explorerState, 1);
         ClassifiedState sameState = createStateOppositeOrder(1, 2);
         assertTrue(set.contains(sameState));
     }
@@ -82,7 +82,7 @@ public class ExploredSetTest {
     @Test
     public void doesNotContainDifferentItem() {
         set = new ExploredSet(10, Arrays.asList("P1", "P2"));
-        set.add(explorerState);
+        set.add(explorerState, 1);
         ClassifiedState differentState = createState(22, 1);
         assertFalse(set.contains(differentState));
     }
@@ -92,7 +92,7 @@ public class ExploredSetTest {
         set = new ExploredSet(10, Arrays.asList("P1", "P2"));
         ClassifiedState other = createState(2, 10);
         ClassifiedState another = createState(2, 7);
-        set.addAll(Arrays.asList(explorerState, other, another));
+        set.addAll(Arrays.asList(explorerState, other, another), Arrays.asList(1, 2, 3));
         assertTrue(set.contains(explorerState));
         assertTrue(set.contains(other));
         assertTrue(set.contains(another));
@@ -103,7 +103,7 @@ public class ExploredSetTest {
         set = new ExploredSet(10, Arrays.asList("P1", "P2"));
         ClassifiedState other = createState(2, 10);
         ClassifiedState another = createState(2, 7);
-        set.addAll(Arrays.asList(explorerState, other, another));
+        set.addAll(Arrays.asList(explorerState, other, another), Arrays.asList(1, 2, 3));
         set.clear();
         assertFalse(set.contains(explorerState));
         assertFalse(set.contains(another));
@@ -115,7 +115,7 @@ public class ExploredSetTest {
         set = new ExploredSet(10, Arrays.asList("P1", "P2"));
         ClassifiedState other = createState(2, 10);
         ClassifiedState another = createState(2, 7);
-        set.addAll(Arrays.asList(explorerState, other, another));
+        set.addAll(Arrays.asList(explorerState, other, another), Arrays.asList(1, 2,3));
         assertTrue(set.contains(explorerState));
         assertTrue(set.contains(another));
         assertTrue(set.contains(other));
@@ -124,8 +124,8 @@ public class ExploredSetTest {
         ClassifiedState other2 = createState(6, 0);
         ClassifiedState another2 = createState(1, 5);
         ExploredSet newSet = new ExploredSet(10, Arrays.asList("P1", "P2"));
-        newSet.add(other2);
-        newSet.add(another2);
+        newSet.add(other2, 2);
+        newSet.add(another2, 3);
 
         set.addAll(newSet);
         assertTrue(set.contains(another2));
@@ -137,7 +137,7 @@ public class ExploredSetTest {
         set = new ExploredSet(10, Arrays.asList("P1", "P2"));
         ClassifiedState other = createState(2, 10);
         ClassifiedState another = createState(2, 7);
-        set.addAll(Arrays.asList(explorerState, other, another));
+        set.addAll(Arrays.asList(explorerState, other, another), Arrays.asList(1, 2, 3));
         assertTrue(set.contains(explorerState));
         assertTrue(set.contains(another));
         assertTrue(set.contains(other));
@@ -146,8 +146,8 @@ public class ExploredSetTest {
         ClassifiedState other2 = createState(6, 0);
         ClassifiedState another2 = createState(1, 5);
         ExploredSet newSet = new ExploredSet(5, Arrays.asList("P1", "P2"));
-        newSet.add(other2);
-        newSet.add(another2);
+        newSet.add(other2, 2);
+        newSet.add(another2, 3);
 
         try {
             set.addAll(newSet);
@@ -169,7 +169,7 @@ public class ExploredSetTest {
         ClassifiedState state = StateUtils.tangibleStateFromJson(jsonValue);
 
         set = new ExploredSet(10, new LinkedList<>(state.getPlaces()));
-        set.add(state);
+        set.add(state, 1);
         ClassifiedState sameState = StateUtils.tangibleStateFromJson(jsonValue);
         assertTrue(set.contains(sameState));
     }
@@ -185,7 +185,18 @@ public class ExploredSetTest {
         ClassifiedState state2 = StateUtils.tangibleStateFromJson("{\"P1\": {\"Default\": 0}, \"P0\": {\"Default\": 1}, \"P3\": {\"Default\": 1}, \"P2\": {\"Default\": 0}}");
 
         set = new ExploredSet(10, new LinkedList<>(state.getPlaces()));
-        set.add(state);
+        set.add(state, 1);
         assertFalse(set.contains(state2));
+    }
+
+    @Test
+    public void getsId() {
+        set = new ExploredSet(10, Arrays.asList("P1", "P2"));
+        ClassifiedState other = createState(2, 10);
+        ClassifiedState another = createState(2, 7);
+        set.addAll(Arrays.asList(explorerState, other, another), Arrays.asList(1, 2, 3));
+        assertEquals(1, set.getId(explorerState));
+        assertEquals(2, set.getId(other));
+        assertEquals(3, set.getId(another));
     }
 }
