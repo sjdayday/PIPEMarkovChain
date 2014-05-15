@@ -27,10 +27,6 @@ public class KryoStateIOTest {
 
     @Test
     public void singleSuccessor() throws IOException {
-//        ClassifiedState state =
-//                StateUtils.tangibleStateFromJson("{\"P0\": {\"Default\": 1}, \"P1\": {\"Default\": 0}}");
-//        ClassifiedState successor =
-//                StateUtils.tangibleStateFromJson("{\"P0\": {\"Default\": 0}, \"P1\": {\"Default\": 1}}");
         Map<Integer, Double> successors = new HashMap<>();
         successors.put(2, 1.0);
 
@@ -50,12 +46,6 @@ public class KryoStateIOTest {
 
     @Test
     public void doubleSuccessor() throws IOException {
-//        ClassifiedState state =
-//                StateUtils.tangibleStateFromJson("{\"P0\": {\"Default\": 2}, \"P1\": {\"Default\": 0}}");
-//        ClassifiedState successor1 =
-//                StateUtils.tangibleStateFromJson("{\"P0\": {\"Default\": 1}, \"P1\": {\"Default\": 1}}");
-//        ClassifiedState successor2 =
-//                StateUtils.tangibleStateFromJson("{\"P0\": {\"Default\": 0}, \"P1\": {\"Default\": 2}}");
         Map<Integer, Double> successors = new HashMap<>();
         successors.put(2, 1.0);
         successors.put(3, 2.0);
