@@ -10,7 +10,7 @@
 
 
     <scm>
-        <developerConnection>scm:git:git@github.com:sarahtattersall/PIPE.git</developerConnection>
+        <developerConnection>scm:git:git@github.com:sarahtattersall/PIPEMarkovChain.git</developerConnection>
     </scm>
 
 
@@ -100,6 +100,12 @@
                         <phase>deploy</phase>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.4.2</version>
             </plugin>
         </plugins>
     </build>
