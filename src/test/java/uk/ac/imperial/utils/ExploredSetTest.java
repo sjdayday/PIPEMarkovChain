@@ -110,52 +110,52 @@ public class ExploredSetTest {
         assertFalse(set.contains(explorerState));
     }
 
-    @Test
-    public void allAllOfOtherSetSameSize() {
-        set = new ExploredSet(10, Arrays.asList("P1", "P2"));
-        ClassifiedState other = createState(2, 10);
-        ClassifiedState another = createState(2, 7);
-        set.addAll(Arrays.asList(explorerState, other, another), Arrays.asList(1, 2,3));
-        assertTrue(set.contains(explorerState));
-        assertTrue(set.contains(another));
-        assertTrue(set.contains(other));
+//    @Test
+//    public void allAllOfOtherSetSameSize() {
+//        set = new ExploredSet(10, Arrays.asList("P1", "P2"));
+//        ClassifiedState other = createState(2, 10);
+//        ClassifiedState another = createState(2, 7);
+//        set.addAll(Arrays.asList(explorerState, other, another), Arrays.asList(1, 2,3));
+//        assertTrue(set.contains(explorerState));
+//        assertTrue(set.contains(another));
+//        assertTrue(set.contains(other));
+//
+//
+//        ClassifiedState other2 = createState(6, 0);
+//        ClassifiedState another2 = createState(1, 5);
+//        ExploredSet newSet = new ExploredSet(10, Arrays.asList("P1", "P2"));
+//        newSet.add(other2, 2);
+//        newSet.add(another2, 3);
+//
+//        set.addAll(newSet);
+//        assertTrue(set.contains(another2));
+//        assertTrue(set.contains(other2));
+//    }
 
-
-        ClassifiedState other2 = createState(6, 0);
-        ClassifiedState another2 = createState(1, 5);
-        ExploredSet newSet = new ExploredSet(10, Arrays.asList("P1", "P2"));
-        newSet.add(other2, 2);
-        newSet.add(another2, 3);
-
-        set.addAll(newSet);
-        assertTrue(set.contains(another2));
-        assertTrue(set.contains(other2));
-    }
-
-    @Test
-    public void addAllOfDifferentSizeThrowsError() {
-        set = new ExploredSet(10, Arrays.asList("P1", "P2"));
-        ClassifiedState other = createState(2, 10);
-        ClassifiedState another = createState(2, 7);
-        set.addAll(Arrays.asList(explorerState, other, another), Arrays.asList(1, 2, 3));
-        assertTrue(set.contains(explorerState));
-        assertTrue(set.contains(another));
-        assertTrue(set.contains(other));
-
-
-        ClassifiedState other2 = createState(6, 0);
-        ClassifiedState another2 = createState(1, 5);
-        ExploredSet newSet = new ExploredSet(5, Arrays.asList("P1", "P2"));
-        newSet.add(other2, 2);
-        newSet.add(another2, 3);
-
-        try {
-            set.addAll(newSet);
-            fail("Expected Runtime excption because sets differed in size and there is no item to reconstruct the hash code from!");
-        } catch (RuntimeException e) {
-            assertEquals("Cannot combine sets with different sized arrays. Due to compression here is no item to reconstruct hashcode from!", e.getMessage());
-        }
-    }
+//    @Test
+//    public void addAllOfDifferentSizeThrowsError() {
+//        set = new ExploredSet(10, Arrays.asList("P1", "P2"));
+//        ClassifiedState other = createState(2, 10);
+//        ClassifiedState another = createState(2, 7);
+//        set.addAll(Arrays.asList(explorerState, other, another), Arrays.asList(1, 2, 3));
+//        assertTrue(set.contains(explorerState));
+//        assertTrue(set.contains(another));
+//        assertTrue(set.contains(other));
+//
+//
+//        ClassifiedState other2 = createState(6, 0);
+//        ClassifiedState another2 = createState(1, 5);
+//        ExploredSet newSet = new ExploredSet(5, Arrays.asList("P1", "P2"));
+//        newSet.add(other2, 2);
+//        newSet.add(another2, 3);
+//
+//        try {
+//            set.addAll(newSet);
+//            fail("Expected Runtime excption because sets differed in size and there is no item to reconstruct the hash code from!");
+//        } catch (RuntimeException e) {
+//            assertEquals("Cannot combine sets with different sized arrays. Due to compression here is no item to reconstruct hashcode from!", e.getMessage());
+//        }
+//    }
 
     /**
      * This test was found when exploring medium_complex_5832,

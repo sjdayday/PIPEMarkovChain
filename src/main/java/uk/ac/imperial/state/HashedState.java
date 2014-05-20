@@ -35,6 +35,11 @@ public class HashedState implements State {
     }
 
     @Override
+    public boolean containsTokens(String id) {
+        return tokenCounts.containsKey(id);
+    }
+
+    @Override
     public Collection<String> getPlaces() {
         return tokenCounts.keySet();
     }

@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 
 public class HashedStateBuilderTest {
@@ -25,6 +27,21 @@ public class HashedStateBuilderTest {
         Map<String, Integer> map = state.getTokens("P1");
         int actual = map.get("Default");
         assertEquals(1, actual);
+    }
+
+    @Test
+    public void containsToken() {
+        builder.placeWithToken("P1", "Default", 1);
+        HashedState state = builder.build();
+        assertTrue(state.containsTokens("P1"));
+    }
+
+
+    @Test
+    public void doesNotContainToken() {
+        builder.placeWithToken("P1", "Default", 1);
+        HashedState state = builder.build();
+        assertFalse(state.containsTokens("P0"));
     }
 
     @Test

@@ -18,7 +18,12 @@ public class ExploredSet {
     /**
      * Size of array
      */
-    private final int size;
+    private final int arraySize;
+
+    /**
+     * Number of items in set
+     */
+    private int size = 0;
 
     /**
      * Due to states potentially having different ordering of the places in their map
@@ -33,6 +38,7 @@ public class ExploredSet {
      * Array to store LinkedList of HashCode in. This is the underlying 'Set' structure
      */
     private final List<LinkedList<StateEntry>> array;
+
 
     /**
      * 32 bit hash function
@@ -66,12 +72,12 @@ public class ExploredSet {
     /**
      * Initialises the underlying structure of the set
      *
-     * @param size underlying size of the set. It will not change
+     * @param arraySize underlying size of the set. It will not change
      */
-    public ExploredSet(int size, List<String> placeOrdering) {
-        this.size = size;
-        array = new ArrayList<>(size);
-        for (int i = 0; i < size; i++) {
+    public ExploredSet(int arraySize, List<String> placeOrdering) {
+        this.arraySize = arraySize;
+        array = new ArrayList<>(arraySize);
+        for (int i = 0; i < arraySize; i++) {
             array.add(new LinkedList<StateEntry>());
         }
         this.placeOrdering = new LinkedList<>(placeOrdering);
@@ -88,7 +94,11 @@ public class ExploredSet {
         int location = getLocation(state);
         HashCode value = hashTwo(state);
         LinkedList<StateEntry> list = array.get(location);
+        int previousSize = list.size();
         list.add(new StateEntry(value, id));
+        if (list.size() > previousSize) {
+            size++;
+        }
     }
 
     /**
@@ -116,14 +126,15 @@ public class ExploredSet {
      * @param exploredSet
      */
     public void addAll(ExploredSet exploredSet) {
-        if (exploredSet.array.size() != this.array.size()) {
-            throw new RuntimeException("Cannot combine sets with different sized arrays. Due to compression here is no item to reconstruct hashcode from!");
-        }
-        for (int i = 0; i < exploredSet.array.size(); i++) {
-            List<StateEntry> theirs = exploredSet.array.get(i);
-            List<StateEntry> ours = array.get(i % size);
-            ours.addAll(theirs);
-        }
+        throw new UnsupportedOperationException();
+//        if (exploredSet.array.size() != this.array.size()) {
+//            throw new RuntimeException("Cannot combine sets with different sized arrays. Due to compression here is no item to reconstruct hashcode from!");
+//        }
+//        for (int i = 0; i < exploredSet.array.size(); i++) {
+//            List<StateEntry> theirs = exploredSet.array.get(i);
+//            List<StateEntry> ours = array.get(i % arraySize);
+//            ours.addAll(theirs);
+//        }
     }
 
     /**
@@ -139,7 +150,7 @@ public class ExploredSet {
      * @return the location that this state falls in the array
      */
     public int getLocation(ClassifiedState state) {
-        return  Math.abs(hashOne(state) % size);
+        return  Math.abs(hashOne(state) % arraySize);
     }
 
     public boolean contains(ClassifiedState state) {
@@ -169,6 +180,14 @@ public class ExploredSet {
         for (List<StateEntry> list : array) {
             list.clear();
         }
+    }
+
+    public int size() {
+        int size = 0;
+        for (List<StateEntry> list : array) {
+            size += list.size();
+        }
+        return size;
     }
 
     /**

@@ -102,7 +102,22 @@ public class HashedClassifiedState implements ClassifiedState {
     }
 
     @Override
+    public boolean containsTokens(String id) {
+        return state.containsTokens(id);
+    }
+
+    @Override
     public Collection<String> getPlaces() {
         return state.getPlaces();
+    }
+
+    @Override
+    public String toString() {
+        String stateString = state.toString();
+        if (isTangible()) {
+            return "Tangible: " + stateString;
+        }
+        return "Vanishing: " + stateString;
+
     }
 }

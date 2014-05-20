@@ -1,6 +1,7 @@
 package uk.ac.imperial.state;
 
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Represents the state of a Petri net in the Markov Chain
@@ -23,7 +24,14 @@ public interface State {
      * @param id Place id
      * @return number of tokens for the place with the given id
      */
-    java.util.Map<String, Integer> getTokens(String id);
+    Map<String, Integer> getTokens(String id);
+
+    /**
+     *
+     * @param id Place id
+     * @return true if there are registered tokens for the given place
+     */
+    boolean containsTokens(String id);
 
     /**
      *
