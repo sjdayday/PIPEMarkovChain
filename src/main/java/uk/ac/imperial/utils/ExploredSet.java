@@ -37,7 +37,9 @@ public class ExploredSet {
     /**
      * Array to store LinkedList of HashCode in. This is the underlying 'Set' structure
      */
-    private final List<LinkedList<StateEntry>> array;
+    private final List<HashSet<HashCode>> array;
+
+    private final Map<HashEntry, Integer> idMappings = new TreeMap<>();
 
 
     /**
@@ -78,7 +80,7 @@ public class ExploredSet {
         this.arraySize = arraySize;
         array = new ArrayList<>(arraySize);
         for (int i = 0; i < arraySize; i++) {
-            array.add(new LinkedList<StateEntry>());
+            array.add(new HashSet<HashCode>());
         }
         this.placeOrdering = new LinkedList<>(placeOrdering);
     }
@@ -93,9 +95,10 @@ public class ExploredSet {
     public void add(ClassifiedState state, int id) {
         int location = getLocation(state);
         HashCode value = hashTwo(state);
-        LinkedList<StateEntry> list = array.get(location);
+        HashSet<HashCode> list = array.get(location);
         int previousSize = list.size();
-        list.add(new StateEntry(value, id));
+        list.add(value);
+        idMappings.put(new HashEntry(hashOne(state), value), id);
         if (list.size() > previousSize) {
             size++;
         }
@@ -150,21 +153,24 @@ public class ExploredSet {
      * @return the location that this state falls in the array
      */
     public int getLocation(ClassifiedState state) {
-        return  Math.abs(hashOne(state) % arraySize);
+        return  Math.abs(hashOneInt(state) % arraySize);
     }
 
     public boolean contains(ClassifiedState state) {
         int location = getLocation(state);
         HashCode value = hashTwo(state);
-        List<StateEntry> list = array.get(location);
-        return list.contains(new StateEntry(value));
+        HashSet<HashCode> list = array.get(location);
+        return list.contains(value);
     }
 
 
 
-    private int hashOne(ClassifiedState state) {
-        HashCode hc = hashCodeForState(state, murmur3);
-        return hc.asInt();
+    private int hashOneInt(ClassifiedState state) {
+        return hashOne(state).asInt();
+    }
+
+    private HashCode hashOne(ClassifiedState state) {
+         return hashCodeForState(state, murmur3);
     }
 
     private HashCode hashTwo(ClassifiedState state) {
@@ -177,14 +183,14 @@ public class ExploredSet {
     }
 
     public void clear() {
-        for (List<StateEntry> list : array) {
+        for (HashSet<HashCode> list : array) {
             list.clear();
         }
     }
 
     public int size() {
         int size = 0;
-        for (List<StateEntry> list : array) {
+        for (HashSet<HashCode> list : array) {
             size += list.size();
         }
         return size;
@@ -196,11 +202,10 @@ public class ExploredSet {
      * @return the unique id given to this state
      */
     public int getId(ClassifiedState state) {
-        int location = getLocation(state);
-        List<StateEntry> list = array.get(location);
-        HashCode value = hashTwo(state);
-        int index = list.indexOf(new StateEntry(value));
-        return list.get(index).id;
+        HashEntry entry = new HashEntry(hashOne(state), hashTwo(state));
+        return idMappings.get(entry);
+//        int index = list.toArray(new StateEntry(value));
+//        return list.get(index).id;
 
     }
 
@@ -253,4 +258,48 @@ public class ExploredSet {
          */
         public final int id;
     }
+
+    private class HashEntry implements Comparable<HashEntry> {
+        private final HashCode h1;
+        private final HashCode h2;
+
+        private HashEntry(HashCode h1, HashCode h2) {
+            this.h1 = h1;
+            this.h2 = h2;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof HashEntry)) {
+                return false;
+            }
+
+            HashEntry entry = (HashEntry) o;
+
+            if (!h1.equals(entry.h1)) {
+                return false;
+            }
+            if (!h2.equals(entry.h2)) {
+                return false;
+            }
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = h1.hashCode();
+            result = 31 * result + h2.hashCode();
+            return result;
+        }
+
+        @Override
+        public int compareTo(HashEntry o) {
+            return Long.compare(h2.asLong(), o.h2.asLong());
+        }
+    }
+
 }
