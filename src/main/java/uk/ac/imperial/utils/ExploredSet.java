@@ -37,7 +37,7 @@ public class ExploredSet {
     /**
      * Array to store LinkedList of HashCode in. This is the underlying 'Set' structure
      */
-    private final List<LinkedList<StateEntry>> array;
+    private final List<TreeSet<StateEntry>> array;
 
 
     /**
@@ -78,7 +78,7 @@ public class ExploredSet {
         this.arraySize = arraySize;
         array = new ArrayList<>(arraySize);
         for (int i = 0; i < arraySize; i++) {
-            array.add(new LinkedList<StateEntry>());
+            array.add(new TreeSet<StateEntry>());
         }
         this.placeOrdering = new LinkedList<>(placeOrdering);
     }
@@ -93,7 +93,7 @@ public class ExploredSet {
     public void add(ClassifiedState state, int id) {
         int location = getLocation(state);
         HashCode value = hashTwo(state);
-        LinkedList<StateEntry> list = array.get(location);
+        TreeSet<StateEntry> list = array.get(location);
         int previousSize = list.size();
         list.add(new StateEntry(value, id));
         if (list.size() > previousSize) {
@@ -156,7 +156,7 @@ public class ExploredSet {
     public boolean contains(ClassifiedState state) {
         int location = getLocation(state);
         HashCode value = hashTwo(state);
-        List<StateEntry> list = array.get(location);
+        TreeSet<StateEntry> list = array.get(location);
         return list.contains(new StateEntry(value));
     }
 
@@ -177,14 +177,14 @@ public class ExploredSet {
     }
 
     public void clear() {
-        for (List<StateEntry> list : array) {
+        for (TreeSet<StateEntry> list : array) {
             list.clear();
         }
     }
 
     public int size() {
         int size = 0;
-        for (List<StateEntry> list : array) {
+        for (TreeSet<StateEntry> list : array) {
             size += list.size();
         }
         return size;
@@ -197,14 +197,19 @@ public class ExploredSet {
      */
     public int getId(ClassifiedState state) {
         int location = getLocation(state);
-        List<StateEntry> list = array.get(location);
+        TreeSet<StateEntry> list = array.get(location);
         HashCode value = hashTwo(state);
-        int index = list.indexOf(new StateEntry(value));
-        return list.get(index).id;
-
+        StateEntry[] entries = new StateEntry[list.size()];
+        StateEntry[] actualEntries  = list.toArray(entries);
+        for (StateEntry entry : actualEntries) {
+            if (entry.hashCode.equals(value)) {
+                return entry.id;
+            }
+        }
+        return -1;
     }
 
-    private class StateEntry {
+    private class StateEntry implements Comparable<StateEntry> {
         private StateEntry(HashCode hashCode, int id) {
             this.hashCode = hashCode;
             this.id = id;
@@ -252,5 +257,10 @@ public class ExploredSet {
          * Unique id meta data for each state
          */
         public final int id;
+
+        @Override
+        public int compareTo(StateEntry o) {
+            return Long.compare(hashCode.asLong(), o.hashCode.asLong());
+        }
     }
 }
