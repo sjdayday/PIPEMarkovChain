@@ -39,6 +39,8 @@ public class ExploredSet {
      */
     private final List<TreeSet<StateEntry>> array;
 
+    private final Map<HashEntry, Integer> idMappings = new TreeMap<>();
+
 
     /**
      * 32 bit hash function
@@ -95,7 +97,8 @@ public class ExploredSet {
         HashCode value = hashTwo(state);
         TreeSet<StateEntry> list = array.get(location);
         int previousSize = list.size();
-        list.add(new StateEntry(value, id));
+        list.add(new StateEntry(value));
+        idMappings.put(new HashEntry(hashOne(state), value), id);
         if (list.size() > previousSize) {
             size++;
         }
@@ -127,14 +130,14 @@ public class ExploredSet {
      */
     public void addAll(ExploredSet exploredSet) {
         throw new UnsupportedOperationException();
-//        if (exploredSet.array.size() != this.array.size()) {
-//            throw new RuntimeException("Cannot combine sets with different sized arrays. Due to compression here is no item to reconstruct hashcode from!");
-//        }
-//        for (int i = 0; i < exploredSet.array.size(); i++) {
-//            List<StateEntry> theirs = exploredSet.array.get(i);
-//            List<StateEntry> ours = array.get(i % arraySize);
-//            ours.addAll(theirs);
-//        }
+        //        if (exploredSet.array.size() != this.array.size()) {
+        //            throw new RuntimeException("Cannot combine sets with different sized arrays. Due to compression here is no item to reconstruct hashcode from!");
+        //        }
+        //        for (int i = 0; i < exploredSet.array.size(); i++) {
+        //            List<StateEntry> theirs = exploredSet.array.get(i);
+        //            List<StateEntry> ours = array.get(i % arraySize);
+        //            ours.addAll(theirs);
+        //        }
     }
 
     /**
@@ -150,7 +153,7 @@ public class ExploredSet {
      * @return the location that this state falls in the array
      */
     public int getLocation(ClassifiedState state) {
-        return  Math.abs(hashOne(state) % arraySize);
+        return  Math.abs(hashOneInt(state) % arraySize);
     }
 
     public boolean contains(ClassifiedState state) {
@@ -162,9 +165,12 @@ public class ExploredSet {
 
 
 
-    private int hashOne(ClassifiedState state) {
-        HashCode hc = hashCodeForState(state, murmur3);
-        return hc.asInt();
+    private int hashOneInt(ClassifiedState state) {
+        return hashOne(state).asInt();
+    }
+
+    private HashCode hashOne(ClassifiedState state) {
+        return hashCodeForState(state, murmur3);
     }
 
     private HashCode hashTwo(ClassifiedState state) {
@@ -196,33 +202,16 @@ public class ExploredSet {
      * @return the unique id given to this state
      */
     public int getId(ClassifiedState state) {
-        int location = getLocation(state);
-        TreeSet<StateEntry> list = array.get(location);
-        HashCode value = hashTwo(state);
-        StateEntry[] entries = new StateEntry[list.size()];
-        StateEntry[] actualEntries  = list.toArray(entries);
-        for (StateEntry entry : actualEntries) {
-            if (entry.hashCode.equals(value)) {
-                return entry.id;
-            }
-        }
-        return -1;
+        HashEntry entry = new HashEntry(hashOne(state), hashTwo(state));
+        return idMappings.get(entry);
+        //        int index = list.toArray(new StateEntry(value));
+        //        return list.get(index).id;
+
     }
 
-    private class StateEntry implements Comparable<StateEntry> {
-        private StateEntry(HashCode hashCode, int id) {
-            this.hashCode = hashCode;
-            this.id = id;
-        }
-
-        /**
-         * Constructor used when asking if the set contains this object
-         * since equality is done via the hashcode only.
-         * @param hashCode
-         */
+    private class StateEntry implements Comparable<StateEntry>{
         private StateEntry(HashCode hashCode) {
             this.hashCode = hashCode;
-            this.id = 0;
         }
 
         @Override
@@ -253,14 +242,53 @@ public class ExploredSet {
          */
         public final HashCode hashCode;
 
-        /**
-         * Unique id meta data for each state
-         */
-        public final int id;
-
         @Override
         public int compareTo(StateEntry o) {
-            return Long.compare(hashCode.asLong(), o.hashCode.asLong());
+            return Long.compare(o.hashCode.asLong(), hashCode.asLong());
         }
     }
+
+    private class HashEntry implements Comparable<HashEntry> {
+        private final HashCode h1;
+        private final HashCode h2;
+
+        private HashEntry(HashCode h1, HashCode h2) {
+            this.h1 = h1;
+            this.h2 = h2;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof HashEntry)) {
+                return false;
+            }
+
+            HashEntry entry = (HashEntry) o;
+
+            if (!h1.equals(entry.h1)) {
+                return false;
+            }
+            if (!h2.equals(entry.h2)) {
+                return false;
+            }
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = h1.hashCode();
+            result = 31 * result + h2.hashCode();
+            return result;
+        }
+
+        @Override
+        public int compareTo(HashEntry o) {
+            return Long.compare(h2.asLong(), o.h2.asLong());
+        }
+    }
+
 }
