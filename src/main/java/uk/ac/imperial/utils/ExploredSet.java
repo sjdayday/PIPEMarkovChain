@@ -70,7 +70,7 @@ public final class ExploredSet {
     /**
      * Number of items in set
      */
-    private int size = 0;
+    private int itemCount = 0;
 
     /**
      * Initialises the underlying structure of the set
@@ -102,7 +102,7 @@ public final class ExploredSet {
         list.add(new StateEntry(value));
         idMappings.put(new HashEntry(hashOne(state), value), id);
         if (list.size() > previousSize) {
-            size++;
+            itemCount++;
         }
     }
 
@@ -165,7 +165,7 @@ public final class ExploredSet {
     }
 
     public int size() {
-        return size;
+        return itemCount;
     }
 
     /**
@@ -180,7 +180,7 @@ public final class ExploredSet {
 
     }
 
-    private final static class StateEntry implements Comparable<StateEntry> {
+    private static final class StateEntry implements Comparable<StateEntry> {
         /**
          * Second hash of a state used to identify equality
          */
@@ -221,7 +221,7 @@ public final class ExploredSet {
 
     }
 
-    private final static class HashEntry implements Comparable<HashEntry> {
+    private static final class HashEntry implements Comparable<HashEntry> {
         private final HashCode h1;
 
         private final HashCode h2;
