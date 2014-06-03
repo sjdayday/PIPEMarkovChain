@@ -141,6 +141,20 @@ public class ExploredSetTest {
     }
 
     @Test
+    public void idProblems() throws IOException {
+       ClassifiedState state = StateUtils.tangibleStateFromJson( "{\"P0\" : { \"Default\" : 0, \"Red\" : 1 }, \"P1\" : { \"Default\" : 1, \"Red\" : 0 } }");
+       ClassifiedState state2 = StateUtils.tangibleStateFromJson( "{\"P0\" : { \"Default\" : 1, \"Red\" : 0 }, \"P1\" : { \"Default\" : 0, \"Red\" : 1 } }");
+
+       set = new ExploredSet(10, new LinkedList<>(state.getPlaces()));
+       set.add(state, 1);
+       set.add(state2, 2);
+
+       assertEquals(1, set.getId(state));
+       assertEquals(2, set.getId(state2));
+
+    }
+
+    @Test
     public void getsId() {
         set = new ExploredSet(10, Arrays.asList("P1", "P2"));
         ClassifiedState other = createState(2, 10);

@@ -53,11 +53,12 @@ public final class ExploredSet {
     };
 
     /**
-     * Array to store LinkedList of HashCode in. This is the underlying 'Set' structure
+     * List to store TreeMap of HashCode in. This is the underlying 'Set' structure  and contains
+     * the state to its id
      */
-    private final List<TreeSet<StateEntry>> array;
+    private final List<TreeMap<StateEntry, Integer>> array;
 
-    private final Map<HashEntry, Integer> idMappings = new TreeMap<>();
+//    private final Map<HashEntry, Integer> idMappings = new TreeMap<>();
 
 
     /**
@@ -81,7 +82,7 @@ public final class ExploredSet {
         this.arraySize = arraySize;
         array = new ArrayList<>(arraySize);
         for (int i = 0; i < arraySize; i++) {
-            array.add(new TreeSet<StateEntry>());
+            array.add(new TreeMap<StateEntry, Integer>());
         }
         this.placeOrdering = new LinkedList<>(placeOrdering);
     }
@@ -96,12 +97,11 @@ public final class ExploredSet {
      */
     public void add(ClassifiedState state, int id) {
         int location = getLocation(state);
-        HashCode value = hashTwo(state);
-        TreeSet<StateEntry> list = array.get(location);
-        int previousSize = list.size();
-        list.add(new StateEntry(value));
-        idMappings.put(new HashEntry(hashOne(state), value), id);
-        if (list.size() > previousSize) {
+        HashCode h2 = hashTwo(state);
+        TreeMap<StateEntry, Integer> structure = array.get(location);
+        int previousSize = structure.size();
+        structure.put(new StateEntry(h2), id);
+        if (structure.size() > previousSize) {
             itemCount++;
         }
     }
@@ -123,8 +123,8 @@ public final class ExploredSet {
     public boolean contains(ClassifiedState state) {
         int location = getLocation(state);
         HashCode value = hashTwo(state);
-        TreeSet<StateEntry> list = array.get(location);
-        return list.contains(new StateEntry(value));
+        TreeMap<StateEntry, Integer> structure = array.get(location);
+        return structure.containsKey(new StateEntry(value));
     }
 
     /**
@@ -159,7 +159,7 @@ public final class ExploredSet {
     }
 
     public void clear() {
-        for (TreeSet<StateEntry> list : array) {
+        for (TreeMap<StateEntry, Integer> list : array) {
             list.clear();
         }
     }
@@ -173,11 +173,11 @@ public final class ExploredSet {
      * @return the unique id given to this state
      */
     public int getId(ClassifiedState state) {
-        HashEntry entry = new HashEntry(hashOne(state), hashTwo(state));
-        return idMappings.get(entry);
-        //        int index = list.toArray(new StateEntry(value));
-        //        return list.get(index).id;
-
+        int location = getLocation(state);
+        HashCode value = hashTwo(state);
+        TreeMap<StateEntry, Integer> structure = array.get(location);
+        StateEntry entry = new StateEntry(value);
+        return structure.get(entry);
     }
 
     private static final class StateEntry implements Comparable<StateEntry> {
@@ -219,50 +219,6 @@ public final class ExploredSet {
         }
 
 
-    }
-
-    private static final class HashEntry implements Comparable<HashEntry> {
-        private final HashCode h1;
-
-        private final HashCode h2;
-
-        private HashEntry(HashCode h1, HashCode h2) {
-            this.h1 = h1;
-            this.h2 = h2;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof HashEntry)) {
-                return false;
-            }
-
-            HashEntry entry = (HashEntry) o;
-
-            if (!h1.equals(entry.h1)) {
-                return false;
-            }
-            if (!h2.equals(entry.h2)) {
-                return false;
-            }
-
-            return true;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = h1.hashCode();
-            result = 31 * result + h2.hashCode();
-            return result;
-        }
-
-        @Override
-        public int compareTo(HashEntry o) {
-            return Integer.compare(h2.asInt(), o.h2.asInt());
-        }
     }
 
 }
