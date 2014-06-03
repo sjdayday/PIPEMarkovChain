@@ -16,7 +16,7 @@ public interface MultiStateReader {
      * @param input
      * @return state transitions in the input file
      */
-    public Collection<Record> readRecords(Input input);
+    Collection<Record> readRecords(Input input);
 
     /**
      *

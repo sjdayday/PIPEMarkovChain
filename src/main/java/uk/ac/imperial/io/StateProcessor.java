@@ -18,7 +18,7 @@ public interface StateProcessor {
      * @param stateId unique id for state
      * @param successorRates unique id for successors to the rate at which they are enterd
      */
-    public void processTransitions(int stateId, Map<Integer, Double> successorRates);
+    void processTransitions(int stateId, Map<Integer, Double> successorRates);
 
     /**
      *
@@ -27,6 +27,6 @@ public interface StateProcessor {
      * @param state
      * @param stateId
      */
-    public void processState(ClassifiedState state, int stateId);
+    void processState(ClassifiedState state, int stateId);
 
 }
