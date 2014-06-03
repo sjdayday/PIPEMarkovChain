@@ -7,7 +7,7 @@ import java.util.Map;
  * Class for building {@link uk.ac.imperial.state.HashedState}
  * without having to explicitly create the Map
  */
-public class HashedStateBuilder {
+public final class HashedStateBuilder {
     private Map<String, Map<String, Integer>> tokenCounts = new HashMap<>();
 
     /**

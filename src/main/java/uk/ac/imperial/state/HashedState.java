@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HashedState implements State {
+public final class HashedState implements State {
     /**
      * The token counts for the current State.
      * Contains Place id -> {Token -> Integer count}

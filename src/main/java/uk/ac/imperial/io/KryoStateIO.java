@@ -19,7 +19,7 @@ import java.util.Map;
  *
  * Can read and write state objects
  */
-public class KryoStateIO implements StateWriter, StateReader {
+public final class KryoStateIO implements StateWriter, StateReader {
 
     private Kryo kryo = new Kryo();
 

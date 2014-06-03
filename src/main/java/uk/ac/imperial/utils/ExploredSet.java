@@ -13,7 +13,7 @@ import java.util.*;
  * <p/>
  * The idea is that false-positives are very low due to the double hash.
  */
-public class ExploredSet {
+public final class ExploredSet {
 
     /**
      * Size of array
@@ -180,7 +180,7 @@ public class ExploredSet {
 
     }
 
-    private static class StateEntry implements Comparable<StateEntry> {
+    private final static class StateEntry implements Comparable<StateEntry> {
         /**
          * Second hash of a state used to identify equality
          */
@@ -221,7 +221,7 @@ public class ExploredSet {
 
     }
 
-    private static class HashEntry implements Comparable<HashEntry> {
+    private final static class HashEntry implements Comparable<HashEntry> {
         private final HashCode h1;
 
         private final HashCode h2;

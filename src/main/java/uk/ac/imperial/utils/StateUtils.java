@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Utility class for building states from Json strings
  */
-public class StateUtils {
+public final class StateUtils {
 
     private StateUtils() {}
 

@@ -7,7 +7,7 @@ import java.util.Map;
  * Java Bean ClassifiedState implementation that wraps a State
  * to contain extra classification information required
  */
-public class HashedClassifiedState implements ClassifiedState {
+public final class HashedClassifiedState implements ClassifiedState {
     /**
      * Internally wrapped state
      */

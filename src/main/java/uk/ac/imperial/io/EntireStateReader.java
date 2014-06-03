@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * This class reads all the records in an input stream
  */
-public class EntireStateReader implements MultiStateReader {
+public final class EntireStateReader implements MultiStateReader {
 
     private final StateReader reader;
 

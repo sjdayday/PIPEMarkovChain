@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * This class writes to a StateWriter the collected transitions
  */
-public class StateIOProcessor implements StateProcessor {
+public final class StateIOProcessor implements StateProcessor {
     private final StateWriter writer;
 
     private final Output transitionOutput;
