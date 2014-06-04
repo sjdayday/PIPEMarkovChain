@@ -31,11 +31,11 @@ public final class ExploredSet {
     /**
      * Funnel used to generate HashCode of ExplorerState
      * <p/>
-     * Due to the behaviour of a HashMap, order is not guarnateed on objects
+     * Due to the behaviour of a HashMap, order is not guaranteed on objects
      * so we cannot loop through the map of the explorer state and add the
      * primitive types, because a differing order will generate a different hash code.
      * <p/>
-     * It appears though that the map hashcode method returns the same value
+     * It appears though that the map hash code method returns the same value
      * no matter the order so this has been used here.
      */
     private final Funnel<ClassifiedState> funnel = new Funnel<ClassifiedState>() {
