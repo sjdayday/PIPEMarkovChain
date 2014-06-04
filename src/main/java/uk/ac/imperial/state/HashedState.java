@@ -4,6 +4,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Implements the {@link uk.ac.imperial.state.State} interface and uses
+ * a hashmap to store each places token counts in the given state
+ */
 public final class HashedState implements State {
     /**
      * The token counts for the current State.
@@ -17,28 +21,54 @@ public final class HashedState implements State {
     public HashedState() {
     }
 
+    /**
+     * Constructor containing the counts for each place
+     * @param tokenCounts
+     */
     public HashedState(Map<String, Map<String, Integer>> tokenCounts) {
         this.tokenCounts.putAll(tokenCounts);
     }
 
+    /**
+     *
+     * @return a map representation of the state, mapping place id -> {token id -> count}
+     */
     public Map<String, Map<String, Integer>> getTokenCounts() {
         return tokenCounts;
     }
 
+    /**
+     * Java bean method
+     * @param tokenCounts new token counts for the state, the old token counts will be replaced with these
+     */
     public void setTokenCounts(Map<String, Map<String, Integer>> tokenCounts) {
         this.tokenCounts = tokenCounts;
     }
 
+    /**
+     *
+     * @param id Place id
+     * @return map token id -> counts for the given place in this state
+     */
     @Override
     public Map<String, Integer> getTokens(String id) {
         return tokenCounts.get(id);
     }
 
+    /**
+     *
+     * @param id Place id
+     * @return true if the place has any tokens
+     */
     @Override
     public boolean containsTokens(String id) {
         return tokenCounts.containsKey(id);
     }
 
+    /**
+     *
+     * @return all places referenced in this state
+     */
     @Override
     public Collection<String> getPlaces() {
         return tokenCounts.keySet();
@@ -67,6 +97,11 @@ public final class HashedState implements State {
         return true;
     }
 
+    /**
+     *
+     * @return String representation of the state, displaying place to token counts e.g.
+     * {P0 : {Default : 1, Red : 2}, P1 : {Default : 0, Red : 1}}
+     */
     @Override
     public String toString() {
 

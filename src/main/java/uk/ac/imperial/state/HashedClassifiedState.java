@@ -51,10 +51,18 @@ public final class HashedClassifiedState implements ClassifiedState {
         return new HashedClassifiedState(state, false);
     }
 
+    /**
+     *
+     * @return the underlying unclassified state
+     */
     public State getState() {
         return state;
     }
 
+    /**
+     *
+     * @param state underlying unclassified state
+     */
     public void setState(State state) {
         this.state = state;
     }
@@ -87,30 +95,57 @@ public final class HashedClassifiedState implements ClassifiedState {
         return true;
     }
 
+    /**
+     *
+     * @return true if tangible state, false if vanishing
+     */
     @Override
     public boolean isTangible() {
         return tangible;
     }
 
+    /**
+     * Needed for java bean marshalling when serializing the state with Kyro libraries
+     *
+     * @param tangible true if the state is tangible, false if vanishing
+     */
     public void setTangible(boolean tangible) {
         this.tangible = tangible;
     }
 
+    /**
+     *
+     * @param id Place id
+     * @return map of token id to token count for a given place
+     */
     @Override
     public Map<String, Integer> getTokens(String id) {
         return state.getTokens(id);
     }
 
+    /**
+     *
+     * @param id Place id
+     * @return true if the specified place has any tokens
+     */
     @Override
     public boolean containsTokens(String id) {
         return state.containsTokens(id);
     }
 
+    /**
+     *
+     * @return all places referenced in this state
+     */
     @Override
     public Collection<String> getPlaces() {
         return state.getPlaces();
     }
 
+    /**
+     *
+     * @return string representation of the state containing it's classification too
+     */
     @Override
     public String toString() {
         String stateString = state.toString();

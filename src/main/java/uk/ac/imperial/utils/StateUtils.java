@@ -16,8 +16,18 @@ import java.util.Map;
  */
 public final class StateUtils {
 
+    /**
+     * Private consturctor for utility class
+     */
     private StateUtils() {}
 
+    /**
+     *
+     * @param jsonState json representation of a map place id -> {token id -> count}
+     *                  E.g. "{\"P0\" : { \"Default\" : 0, \"Red\" : 1 }, \"P1\" : { \"Default\" : 1, \"Red\" : 0 } }"
+     * @return unclassified state from the json string representation
+     * @throws IOException
+     */
     public static State stateFromJson(String jsonState) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Map<String, Integer>> map =
@@ -26,11 +36,25 @@ public final class StateUtils {
         return new HashedState(map);
     }
 
+    /**
+     *
+     * @param jsonState json representation of a map place id -> {token id -> count}
+     *                  E.g. "{\"P0\" : { \"Default\" : 0, \"Red\" : 1 }, \"P1\" : { \"Default\" : 1, \"Red\" : 0 } }"
+     * @return state from the json string representation that has been classified as vanishing
+     * @throws IOException
+     */
     public static ClassifiedState vanishingStateFromJson(String jsonState) throws IOException {
         State state = stateFromJson(jsonState);
         return HashedClassifiedState.vanishingState(state);
     }
 
+    /**
+     *
+     * @param jsonState json representation of a map place id -> {token id -> count}
+     *                  E.g. "{\"P0\" : { \"Default\" : 0, \"Red\" : 1 }, \"P1\" : { \"Default\" : 1, \"Red\" : 0 } }"
+     * @return state from the json string representation that has been classified as tangible
+     * @throws IOException
+     */
     public static ClassifiedState tangibleStateFromJson(String jsonState) throws IOException {
         State state = stateFromJson(jsonState);
         return HashedClassifiedState.tangibleState(state);

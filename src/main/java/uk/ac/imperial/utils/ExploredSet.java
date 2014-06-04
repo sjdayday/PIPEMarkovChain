@@ -58,8 +58,6 @@ public final class ExploredSet {
      */
     private final List<TreeMap<StateEntry, Integer>> array;
 
-//    private final Map<HashEntry, Integer> idMappings = new TreeMap<>();
-
 
     /**
      * 32 bit hash function
@@ -120,6 +118,11 @@ public final class ExploredSet {
         }
     }
 
+    /**
+     *
+     * @param state
+     * @return true if the state is stored as a compressed value in the set
+     */
     public boolean contains(ClassifiedState state) {
         int location = getLocation(state);
         HashCode value = hashTwo(state);
@@ -142,28 +145,58 @@ public final class ExploredSet {
         return Math.abs(hashOneInt(state) % arraySize);
     }
 
+    /**
+     *
+     * @param state
+     * @return secondary hash of the state
+     */
     private HashCode hashTwo(ClassifiedState state) {
         return hashCodeForState(state, secondaryHash);
     }
 
+    /**
+     *
+     * @param state
+     * @return integer representation of the primary hash of the state
+     */
     private int hashOneInt(ClassifiedState state) {
         return hashOne(state).asInt();
     }
 
+    /**
+     *
+     * Hashes the state using the specified funnel
+     *
+     * @param state
+     * @param hf function to hash the state with
+     * @return hash code for state using the specified hash function
+     */
     private HashCode hashCodeForState(ClassifiedState state, HashFunction hf) {
         return hf.newHasher().putObject(state, funnel).hash();
     }
 
+    /**
+     *
+     * @param state
+     * @return primary hash of the state
+     */
     private HashCode hashOne(ClassifiedState state) {
         return hashCodeForState(state, primaryHash);
     }
 
+    /**
+     * Clears the entire set
+     */
     public void clear() {
         for (TreeMap<StateEntry, Integer> list : array) {
             list.clear();
         }
     }
 
+    /**
+     *
+     * @return number of states housed in the set
+     */
     public int size() {
         return itemCount;
     }
@@ -180,6 +213,9 @@ public final class ExploredSet {
         return structure.get(entry);
     }
 
+    /**
+     * Internal class for storing the secondary hash within the sets array
+     */
     private static final class StateEntry implements Comparable<StateEntry> {
         /**
          * Second hash of a state used to identify equality
@@ -213,6 +249,13 @@ public final class ExploredSet {
             return secondaryHash.hashCode();
         }
 
+        /**
+         * Compares secondary hashes integer representations against each other.
+         * Uses integer representation since the secondaryHash is currently a 32 bit hash code generator.
+         * If this is changed it could be a Long comparison.
+         * @param o
+         * @return comparison of secondary hashes
+         */
         @Override
         public int compareTo(StateEntry o) {
             return Integer.compare(o.secondaryHash.asInt(), secondaryHash.asInt());

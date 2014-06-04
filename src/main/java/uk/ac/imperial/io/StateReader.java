@@ -4,6 +4,9 @@ import com.esotericsoftware.kryo.io.Input;
 import uk.ac.imperial.state.Record;
 
 
+/**
+ * State reader reads a single record from the input stream
+ */
 public interface StateReader {
 
     /**

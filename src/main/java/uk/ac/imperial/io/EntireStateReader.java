@@ -14,16 +14,23 @@ import java.util.Map;
  */
 public final class EntireStateReader implements MultiStateReader {
 
+    /**
+     * State reader for reading a single record
+     */
     private final StateReader reader;
 
+    /**
+     *
+     * @param reader single record reader to be used to read the entire input
+     */
     public EntireStateReader(StateReader reader) {
         this.reader = reader;
     }
 
     /**
-     * Processes all records in the input
+     * Processes all records in the input stream
      *
-     * @param input
+     * @param input input stream containing written records
      * @return collection of records
      */
     @Override
@@ -36,6 +43,14 @@ public final class EntireStateReader implements MultiStateReader {
         return results;
     }
 
+    /**
+     * Reads the state mappings input stream that contains a map of an integer to a serialized
+     * state. These integers represent those that are in the records input stream
+     *
+     * @param input input stream containing written state mappings of integer to serialized state
+     * @return map of integer state representation to the classified state. These integers can be mapped
+     *         directly to the transitions
+     */
     @Override
     public Map<Integer, ClassifiedState> readStates(Input input) {
         Map<Integer, ClassifiedState> mappings = new HashMap<>();

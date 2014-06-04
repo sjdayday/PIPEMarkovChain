@@ -21,6 +21,9 @@ import java.util.Map;
  */
 public final class KryoStateIO implements StateWriter, StateReader {
 
+    /**
+     * Kryo object for serializing object
+     */
     private Kryo kryo = new Kryo();
 
     /**

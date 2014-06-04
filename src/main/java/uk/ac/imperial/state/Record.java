@@ -3,7 +3,7 @@ package uk.ac.imperial.state;
 import java.util.Map;
 
 /**
- * Record struct for storing state transitions
+ * Immutable record struct for storing state transitions
  * in integer representation
  */
 public class Record {
@@ -18,6 +18,11 @@ public class Record {
      */
     public final Map<Integer, Double> successors;
 
+    /**
+     * Constructor storing a state and successor for future retrial
+     * @param state
+     * @param successors
+     */
     public Record(int state, Map<Integer, Double> successors) {
         this.state = state;
         this.successors = successors;

@@ -6,7 +6,7 @@ import uk.ac.imperial.state.ClassifiedState;
 import java.util.Map;
 
 /**
- * Contains
+ * Contains methods for writing transitions and state mappings to output streams
  */
 public interface StateWriter {
 
