@@ -7,6 +7,34 @@ import java.util.Map;
  * in integer representation
  */
 public class Record {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Record)) {
+            return false;
+        }
+
+        Record record = (Record) o;
+
+        if (state != record.state) {
+            return false;
+        }
+        if (!successors.equals(record.successors)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = state;
+        result = 31 * result + successors.hashCode();
+        return result;
+    }
+
     /**
      * State
      */
