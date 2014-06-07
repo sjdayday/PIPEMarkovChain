@@ -39,4 +39,8 @@ public interface State {
      */
     Collection<String> getPlaces();
 
+    int primaryHash();
+
+    int secondaryHash();
+
 }

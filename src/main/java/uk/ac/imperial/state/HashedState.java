@@ -1,19 +1,27 @@
 package uk.ac.imperial.state;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import com.google.common.hash.HashCode;
+import uk.ac.imperial.utils.StateUtils;
+
+import java.util.*;
 
 /**
  * Implements the {@link uk.ac.imperial.state.State} interface and uses
  * a hashmap to store each places token counts in the given state
  */
 public final class HashedState implements State {
+    private final List<String> placeOrdering = new ArrayList<>();
+
+    private int hashOne;
+
+    private int hashTwo;
+
     /**
      * The token counts for the current State.
      * Contains Place id -> {Token -> Integer count}
      */
     private Map<String, Map<String, Integer>> tokenCounts = new HashMap<>();
+
 
     /**
      * Empty constructor for Java bean needed to marshal object
@@ -23,14 +31,33 @@ public final class HashedState implements State {
 
     /**
      * Constructor containing the counts for each place
+     *
      * @param tokenCounts
      */
     public HashedState(Map<String, Map<String, Integer>> tokenCounts) {
         this.tokenCounts.putAll(tokenCounts);
+        placeOrdering.addAll(tokenCounts.keySet());
+        Collections.sort(placeOrdering);
+        hashOne = hashOne().asInt();
+        hashTwo = hashTwo().asInt();
     }
 
     /**
-     *
+     * @return secondary hash of the state
+     */
+    private HashCode hashTwo() {
+        return StateUtils.hashCodeForState(placeOrdering, this, StateUtils.getSecondaryHash());
+    }
+
+    /**
+     * @return primary hash of the state
+     */
+    private HashCode hashOne() {
+        return StateUtils.hashCodeForState(placeOrdering, this, StateUtils.getPrimaryHash());
+    }
+
+
+    /**
      * @return a map representation of the state, mapping place id -> {token id -> count}
      */
     public Map<String, Map<String, Integer>> getTokenCounts() {
@@ -39,6 +66,7 @@ public final class HashedState implements State {
 
     /**
      * Java bean method
+     *
      * @param tokenCounts new token counts for the state, the old token counts will be replaced with these
      */
     public void setTokenCounts(Map<String, Map<String, Integer>> tokenCounts) {
@@ -46,7 +74,6 @@ public final class HashedState implements State {
     }
 
     /**
-     *
      * @param id Place id
      * @return map token id -> counts for the given place in this state
      */
@@ -56,7 +83,6 @@ public final class HashedState implements State {
     }
 
     /**
-     *
      * @param id Place id
      * @return true if the place has any tokens
      */
@@ -66,7 +92,6 @@ public final class HashedState implements State {
     }
 
     /**
-     *
      * @return all places referenced in this state
      */
     @Override
@@ -75,8 +100,13 @@ public final class HashedState implements State {
     }
 
     @Override
-    public int hashCode() {
-        return tokenCounts != null ? tokenCounts.hashCode() : 0;
+    public int primaryHash() {
+        return hashOne;
+    }
+
+    @Override
+    public int secondaryHash() {
+        return hashTwo;
     }
 
     @Override
@@ -90,15 +120,24 @@ public final class HashedState implements State {
 
         HashedState that = (HashedState) o;
 
-        if (tokenCounts != null ? !tokenCounts.equals(that.tokenCounts) : that.tokenCounts != null) {
+        if (hashOne != that.hashOne) {
+            return false;
+        }
+        if (hashTwo != that.hashTwo) {
             return false;
         }
 
         return true;
     }
 
+    @Override
+    public int hashCode() {
+        int result = hashOne;
+        result = 31 * result + hashTwo;
+        return result;
+    }
+
     /**
-     *
      * @return String representation of the state, displaying place to token counts e.g.
      * {P0 : {Default : 1, Red : 2}, P1 : {Default : 0, Red : 1}}
      */

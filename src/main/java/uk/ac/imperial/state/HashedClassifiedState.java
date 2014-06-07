@@ -142,6 +142,16 @@ public final class HashedClassifiedState implements ClassifiedState {
         return state.getPlaces();
     }
 
+    @Override
+    public int primaryHash() {
+        return state.primaryHash();
+    }
+
+    @Override
+    public int secondaryHash() {
+        return state.secondaryHash();
+    }
+
     /**
      *
      * @return string representation of the state containing it's classification too

@@ -1,7 +1,8 @@
 package uk.ac.imperial.utils;
 
-import com.google.common.base.Charsets;
-import com.google.common.hash.*;
+import com.google.common.hash.HashCode;
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hashing;
 import uk.ac.imperial.state.ClassifiedState;
 
 import java.util.*;
@@ -21,42 +22,10 @@ public final class ExploredSet {
     private final int arraySize;
 
     /**
-     * Due to states potentially having different ordering of the places in their map
-     * this affects their hash value.
-     * <p/>
-     * Thus this list defines a definitive ordering for querying places in the state
-     */
-    private final List<String> placeOrdering;
-
-    /**
-     * Funnel used to generate HashCode of ExplorerState
-     * <p/>
-     * Due to the behaviour of a HashMap, order is not guaranteed on objects
-     * so we cannot loop through the map of the explorer state and add the
-     * primitive types, because a differing order will generate a different hash code.
-     * <p/>
-     * It appears though that the map hash code method returns the same value
-     * no matter the order so this has been used here.
-     */
-    private final Funnel<ClassifiedState> funnel = new Funnel<ClassifiedState>() {
-        @Override
-        public void funnel(ClassifiedState from, PrimitiveSink into) {
-            into.putBoolean(from.isTangible());
-            for (String place : placeOrdering) {
-                into.putString(place, Charsets.UTF_8);
-                for (Map.Entry<String, Integer> entry : from.getTokens(place).entrySet()) {
-                    into.putString(entry.getKey(), Charsets.UTF_8);
-                    into.putInt(entry.getValue());
-                }
-            }
-        }
-    };
-
-    /**
      * List to store TreeMap of HashCode in. This is the underlying 'Set' structure  and contains
      * the state to its id
      */
-    private final List<TreeMap<StateEntry, Integer>> array;
+    private final List<TreeMap<Integer, Integer>> array;
 
 
     /**
@@ -80,9 +49,9 @@ public final class ExploredSet {
         this.arraySize = arraySize;
         array = new ArrayList<>(arraySize);
         for (int i = 0; i < arraySize; i++) {
-            array.add(new TreeMap<StateEntry, Integer>());
+            array.add(new TreeMap<Integer, Integer>());
         }
-        this.placeOrdering = new LinkedList<>(placeOrdering);
+//        this.placeOrdering = new LinkedList<>(placeOrdering);
     }
 
     /**
@@ -95,10 +64,10 @@ public final class ExploredSet {
      */
     public void add(ClassifiedState state, int id) {
         int location = getLocation(state);
-        HashCode h2 = hashTwo(state);
-        TreeMap<StateEntry, Integer> structure = array.get(location);
+        int h2 = hashTwo(state);
+        TreeMap<Integer, Integer> structure = array.get(location);
         int previousSize = structure.size();
-        structure.put(new StateEntry(h2), id);
+        structure.put(h2, id);
         if (structure.size() > previousSize) {
             itemCount++;
         }
@@ -125,9 +94,9 @@ public final class ExploredSet {
      */
     public boolean contains(ClassifiedState state) {
         int location = getLocation(state);
-        HashCode value = hashTwo(state);
-        TreeMap<StateEntry, Integer> structure = array.get(location);
-        return structure.containsKey(new StateEntry(value));
+        int value = hashTwo(state);
+        TreeMap<Integer, Integer> structure = array.get(location);
+        return structure.containsKey(value);
     }
 
     /**
@@ -150,8 +119,8 @@ public final class ExploredSet {
      * @param state
      * @return secondary hash of the state
      */
-    private HashCode hashTwo(ClassifiedState state) {
-        return hashCodeForState(state, secondaryHash);
+    private int hashTwo(ClassifiedState state) {
+        return state.secondaryHash();
     }
 
     /**
@@ -160,19 +129,7 @@ public final class ExploredSet {
      * @return integer representation of the primary hash of the state
      */
     private int hashOneInt(ClassifiedState state) {
-        return hashOne(state).asInt();
-    }
-
-    /**
-     *
-     * Hashes the state using the specified funnel
-     *
-     * @param state
-     * @param hf function to hash the state with
-     * @return hash code for state using the specified hash function
-     */
-    private HashCode hashCodeForState(ClassifiedState state, HashFunction hf) {
-        return hf.newHasher().putObject(state, funnel).hash();
+        return hashOne(state);
     }
 
     /**
@@ -180,15 +137,15 @@ public final class ExploredSet {
      * @param state
      * @return primary hash of the state
      */
-    private HashCode hashOne(ClassifiedState state) {
-        return hashCodeForState(state, primaryHash);
+    private int hashOne(ClassifiedState state) {
+        return state.primaryHash();
     }
 
     /**
      * Clears the entire set
      */
     public void clear() {
-        for (TreeMap<StateEntry, Integer> list : array) {
+        for (TreeMap<Integer, Integer> list : array) {
             list.clear();
         }
     }
@@ -207,10 +164,9 @@ public final class ExploredSet {
      */
     public int getId(ClassifiedState state) {
         int location = getLocation(state);
-        HashCode value = hashTwo(state);
-        TreeMap<StateEntry, Integer> structure = array.get(location);
-        StateEntry entry = new StateEntry(value);
-        return structure.get(entry);
+        int value = hashTwo(state);
+        TreeMap<Integer, Integer> structure = array.get(location);
+        return structure.get(value);
     }
 
     /**
