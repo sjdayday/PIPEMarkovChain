@@ -90,11 +90,11 @@ public final class StateUtils {
     }
 
     public static HashFunction getPrimaryHash() {
-        return Hashing.crc32();
+        return Hashing.adler32();
     }
 
     public static HashFunction getSecondaryHash() {
-        return  Hashing.adler32();
+        return  Hashing.crc32();
     }
 
 

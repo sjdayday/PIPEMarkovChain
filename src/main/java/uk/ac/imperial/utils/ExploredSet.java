@@ -45,13 +45,12 @@ public final class ExploredSet {
      *
      * @param arraySize underlying size of the set. It will not change
      */
-    public ExploredSet(int arraySize, List<String> placeOrdering) {
+    public ExploredSet(int arraySize) {
         this.arraySize = arraySize;
         array = new ArrayList<>(arraySize);
         for (int i = 0; i < arraySize; i++) {
             array.add(new TreeMap<Integer, Integer>());
         }
-//        this.placeOrdering = new LinkedList<>(placeOrdering);
     }
 
     /**
@@ -111,7 +110,8 @@ public final class ExploredSet {
      * @return the location that this state falls in the array
      */
     public int getLocation(ClassifiedState state) {
-        return Math.abs(hashOneInt(state) % arraySize);
+        int location = hashOneInt(state) % arraySize;
+        return Math.abs(location);
     }
 
     /**
