@@ -23,15 +23,6 @@ public final class StateUtils {
     private StateUtils() {}
 
     /**
-     * A map for containing sorted place orderings. It avoid us sorting
-     * a the places if we've already seen them before.
-     *
-     * Whilst this introduces a global state, nothing depends on this state, it is
-     * meerly used to speed up the state exploration algorithm in the analysis modules
-     */
-    private static Map<Collection<String>, List<String>> cachedPlaceOrderings = new HashMap<>();
-
-    /**
      *
      * @param jsonState json representation of a map place id -> {token id -> count}
      *                  E.g. "{\"P0\" : { \"Default\" : 0, \"Red\" : 1 }, \"P1\" : { \"Default\" : 1, \"Red\" : 0 } }"
@@ -132,14 +123,8 @@ public final class StateUtils {
      * @return ordering based on sorting the places
      */
     private static List<String> getOrdering(State state) {
-        Collection<String> places = state.getPlaces();
-        if (cachedPlaceOrderings.containsKey(places)) {
-           return cachedPlaceOrderings.get(places);
-        }
-
         List<String> placeOrdering = new ArrayList<>(state.getPlaces());
         Collections.sort(placeOrdering);
-        cachedPlaceOrderings.put(places, placeOrdering);
         return placeOrdering;
     }
 
