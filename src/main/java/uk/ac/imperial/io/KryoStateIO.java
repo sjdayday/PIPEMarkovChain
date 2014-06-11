@@ -3,10 +3,8 @@ package uk.ac.imperial.io;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import uk.ac.imperial.state.ClassifiedState;
-import uk.ac.imperial.state.HashedClassifiedState;
-import uk.ac.imperial.state.HashedState;
-import uk.ac.imperial.state.Record;
+import com.esotericsoftware.kryo.serializers.MapSerializer;
+import uk.ac.imperial.state.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,6 +35,9 @@ public final class KryoStateIO implements StateWriter, StateReader {
         kryo.register(HashedClassifiedState.class);
         kryo.register(Double.class);
         kryo.register(Integer.class);
+        kryo.register(Boolean.class);
+        kryo.register(Map.class, new MapSerializer());
+        kryo.register(HashMap.class, new MapSerializer());
     }
 
 
@@ -75,7 +76,8 @@ public final class KryoStateIO implements StateWriter, StateReader {
     @Override
     public void writeState(ClassifiedState state, int stateId, Output output) {
         kryo.writeObject(output, stateId);
-        kryo.writeObject(output, state);
+        kryo.writeObject(output, state.isTangible());
+        kryo.writeObject(output, state.asMap());
     }
 
     /**
@@ -114,7 +116,17 @@ public final class KryoStateIO implements StateWriter, StateReader {
     @Override
     public StateMapping readState(Input inputStream) {
         Integer id = kryo.readObject(inputStream, Integer.class);
-        ClassifiedState state = kryo.readObject(inputStream, HashedClassifiedState.class);
-        return new StateMapping(state, id);
+        Boolean tangible = kryo.readObject(inputStream, Boolean.class);
+        Map<String, Map<String, Integer>> map = kryo.readObject(inputStream, HashMap.class);
+
+        State state = new HashedState(map);
+        ClassifiedState classifiedState;
+        if (tangible) {
+            classifiedState= HashedClassifiedState.tangibleState(state);
+        } else {
+            classifiedState = HashedClassifiedState.vanishingState(state);
+        }
+
+        return new StateMapping(classifiedState, id);
     }
 }

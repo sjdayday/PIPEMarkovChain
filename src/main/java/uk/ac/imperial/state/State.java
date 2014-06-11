@@ -1,5 +1,7 @@
 package uk.ac.imperial.state;
 
+import com.google.common.hash.HashCode;
+
 import java.util.Collection;
 import java.util.Map;
 
@@ -41,6 +43,8 @@ public interface State {
 
     int primaryHash();
 
-    int secondaryHash();
+    HashCode secondaryHash();
+
+    Map<String, Map<String, Integer>> asMap();
 
 }

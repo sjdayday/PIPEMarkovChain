@@ -10,11 +10,10 @@ import java.util.*;
  * a hashmap to store each places token counts in the given state
  */
 public final class HashedState implements State {
-    private final List<String> placeOrdering = new ArrayList<>();
 
     private int hashOne;
 
-    private int hashTwo;
+    private HashCode hashTwo;
 
     /**
      * The token counts for the current State.
@@ -36,24 +35,22 @@ public final class HashedState implements State {
      */
     public HashedState(Map<String, Map<String, Integer>> tokenCounts) {
         this.tokenCounts.putAll(tokenCounts);
-        placeOrdering.addAll(tokenCounts.keySet());
-        Collections.sort(placeOrdering);
         hashOne = hashOne().asInt();
-        hashTwo = hashTwo().asInt();
+        hashTwo = hashTwo();
     }
 
     /**
      * @return secondary hash of the state
      */
     private HashCode hashTwo() {
-        return StateUtils.hashCodeForState(placeOrdering, this, StateUtils.getSecondaryHash());
+        return StateUtils.hashCodeForState(this, StateUtils.getSecondaryHash());
     }
 
     /**
      * @return primary hash of the state
      */
     private HashCode hashOne() {
-        return StateUtils.hashCodeForState(placeOrdering, this, StateUtils.getPrimaryHash());
+        return StateUtils.hashCodeForState(this, StateUtils.getPrimaryHash());
     }
 
 
@@ -105,8 +102,13 @@ public final class HashedState implements State {
     }
 
     @Override
-    public int secondaryHash() {
+    public HashCode secondaryHash() {
         return hashTwo;
+    }
+
+    @Override
+    public Map<String, Map<String, Integer>> asMap() {
+        return tokenCounts;
     }
 
     @Override
@@ -123,7 +125,7 @@ public final class HashedState implements State {
         if (hashOne != that.hashOne) {
             return false;
         }
-        if (hashTwo != that.hashTwo) {
+        if (!hashTwo.equals(that.hashTwo)) {
             return false;
         }
 
@@ -133,7 +135,7 @@ public final class HashedState implements State {
     @Override
     public int hashCode() {
         int result = hashOne;
-        result = 31 * result + hashTwo;
+        result = 31 * result + hashTwo.hashCode();
         return result;
     }
 

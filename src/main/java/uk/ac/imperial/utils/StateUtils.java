@@ -10,9 +10,7 @@ import uk.ac.imperial.state.HashedState;
 import uk.ac.imperial.state.State;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Utility class for building states from Json strings
@@ -20,9 +18,18 @@ import java.util.Map;
 public final class StateUtils {
 
     /**
-     * Private consturctor for utility class
+     * Private constrictor for utility class
      */
     private StateUtils() {}
+
+    /**
+     * A map for containing sorted place orderings. It avoid us sorting
+     * a the places if we've already seen them before.
+     *
+     * Whilst this introduces a global state, nothing depends on this state, it is
+     * meerly used to speed up the state exploration algorithm in the analysis modules
+     */
+    private static Map<Collection<String>, List<String>> cachedPlaceOrderings = new HashMap<>();
 
     /**
      *
@@ -89,12 +96,20 @@ public final class StateUtils {
         };
     }
 
+    /**
+     *
+     * @return primary hash function to be used
+     */
     public static HashFunction getPrimaryHash() {
         return Hashing.adler32();
     }
 
+    /**
+     *
+     * @return secondary hash function to be used
+     */
     public static HashFunction getSecondaryHash() {
-        return  Hashing.crc32();
+        return  Hashing.murmur3_128();
     }
 
 
@@ -105,9 +120,28 @@ public final class StateUtils {
      * @param hf    function to hash the state with
      * @return hash code for state using the specified hash function
      */
-    public static HashCode hashCodeForState(Collection<String> placeOrdering, State state, HashFunction hf) {
+    public static HashCode hashCodeForState(State state, HashFunction hf) {
+        List<String> placeOrdering = getOrdering(state);
         Funnel<State> funnel = StateUtils.getFunnel(placeOrdering);
         return hf.newHasher().putObject(state, funnel).hash();
     }
+
+    /**
+     *
+     * @param state
+     * @return ordering based on sorting the places
+     */
+    private static List<String> getOrdering(State state) {
+        Collection<String> places = state.getPlaces();
+        if (cachedPlaceOrderings.containsKey(places)) {
+           return cachedPlaceOrderings.get(places);
+        }
+
+        List<String> placeOrdering = new ArrayList<>(state.getPlaces());
+        Collections.sort(placeOrdering);
+        cachedPlaceOrderings.put(places, placeOrdering);
+        return placeOrdering;
+    }
+
 
 }

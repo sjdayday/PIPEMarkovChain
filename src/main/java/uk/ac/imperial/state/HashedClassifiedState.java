@@ -1,5 +1,7 @@
 package uk.ac.imperial.state;
 
+import com.google.common.hash.HashCode;
+
 import java.util.Collection;
 import java.util.Map;
 
@@ -148,8 +150,13 @@ public final class HashedClassifiedState implements ClassifiedState {
     }
 
     @Override
-    public int secondaryHash() {
+    public HashCode secondaryHash() {
         return state.secondaryHash();
+    }
+
+    @Override
+    public Map<String, Map<String, Integer>> asMap() {
+        return state.asMap();
     }
 
     /**

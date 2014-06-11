@@ -1,11 +1,12 @@
 package uk.ac.imperial.utils;
 
 import com.google.common.hash.HashCode;
-import com.google.common.hash.HashFunction;
-import com.google.common.hash.Hashing;
 import uk.ac.imperial.state.ClassifiedState;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.TreeMap;
 
 /**
  * Uses a probabilistic method to compress data by double hashing items.
@@ -25,15 +26,8 @@ public final class ExploredSet {
      * List to store TreeMap of HashCode in. This is the underlying 'Set' structure  and contains
      * the state to its id
      */
-    private final List<TreeMap<Integer, Integer>> array;
+    private final List<TreeMap<WrappedHash, Integer>> array;
 
-
-    /**
-     * 32 bit hash function
-     */
-    private final HashFunction primaryHash = Hashing.crc32();
-
-    private final HashFunction secondaryHash = Hashing.adler32();
 
     /**
      * Number of items in set
@@ -49,7 +43,7 @@ public final class ExploredSet {
         this.arraySize = arraySize;
         array = new ArrayList<>(arraySize);
         for (int i = 0; i < arraySize; i++) {
-            array.add(new TreeMap<Integer, Integer>());
+            array.add(new TreeMap<WrappedHash, Integer>());
         }
     }
 
@@ -63,10 +57,9 @@ public final class ExploredSet {
      */
     public void add(ClassifiedState state, int id) {
         int location = getLocation(state);
-        int h2 = hashTwo(state);
-        TreeMap<Integer, Integer> structure = array.get(location);
+        TreeMap<WrappedHash, Integer> structure = array.get(location);
         int previousSize = structure.size();
-        structure.put(h2, id);
+        structure.put(new WrappedHash(state.secondaryHash()), id);
         if (structure.size() > previousSize) {
             itemCount++;
         }
@@ -93,9 +86,9 @@ public final class ExploredSet {
      */
     public boolean contains(ClassifiedState state) {
         int location = getLocation(state);
-        int value = hashTwo(state);
-        TreeMap<Integer, Integer> structure = array.get(location);
-        return structure.containsKey(value);
+        TreeMap<WrappedHash, Integer> structure = array.get(location);
+        WrappedHash wrappedHash = new WrappedHash(state.secondaryHash());
+        return structure.containsKey(wrappedHash);
     }
 
     /**
@@ -112,15 +105,6 @@ public final class ExploredSet {
     public int getLocation(ClassifiedState state) {
         int location = hashOneInt(state) % arraySize;
         return Math.abs(location);
-    }
-
-    /**
-     *
-     * @param state
-     * @return secondary hash of the state
-     */
-    private int hashTwo(ClassifiedState state) {
-        return state.secondaryHash();
     }
 
     /**
@@ -145,7 +129,7 @@ public final class ExploredSet {
      * Clears the entire set
      */
     public void clear() {
-        for (TreeMap<Integer, Integer> list : array) {
+        for (TreeMap<WrappedHash, Integer> list : array) {
             list.clear();
         }
     }
@@ -164,9 +148,10 @@ public final class ExploredSet {
      */
     public int getId(ClassifiedState state) {
         int location = getLocation(state);
-        int value = hashTwo(state);
-        TreeMap<Integer, Integer> structure = array.get(location);
-        return structure.get(value);
+//        int value = hashTwo(state);
+        TreeMap<WrappedHash, Integer> structure = array.get(location);
+        WrappedHash wrappedHash = new WrappedHash(state.secondaryHash());
+        return structure.get(wrappedHash);
     }
 
     /**
@@ -214,10 +199,37 @@ public final class ExploredSet {
          */
         @Override
         public int compareTo(StateEntry o) {
-            return Integer.compare(o.secondaryHash.asInt(), secondaryHash.asInt());
+            return Long.compare(o.secondaryHash.asLong(), secondaryHash.asLong());
         }
 
 
     }
 
+    /**
+     * Private class for the TreeMap in order to make a states hash codes comparable
+     */
+    private class WrappedHash implements Comparable<WrappedHash>{
+        /**
+         * Secondary hash
+         */
+        private final HashCode hash;
+
+        /**
+         * Constructor
+         * @param hash secondary hash
+         */
+        private WrappedHash(HashCode hash) {
+            this.hash = hash;
+        }
+
+        /**
+         *
+         * @param o
+         * @return comparison of long hashcodes
+         */
+        @Override
+        public int compareTo(WrappedHash o) {
+            return Integer.compare(hash.asInt(), o.hash.asInt());
+        }
+    }
 }
