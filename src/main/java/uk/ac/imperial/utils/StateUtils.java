@@ -77,9 +77,9 @@ public final class StateUtils {
             @Override
             public void funnel(State from, PrimitiveSink into) {
                 for (String place : placeOrdering) {
-                    into.putString(place, Charsets.UTF_8);
+                    into.putBytes(place.getBytes());
                     for (Map.Entry<String, Integer> entry : from.getTokens(place).entrySet()) {
-                        into.putString(entry.getKey(), Charsets.UTF_8);
+                        into.putBytes(entry.getKey().getBytes());
                         into.putInt(entry.getValue());
                     }
                 }
