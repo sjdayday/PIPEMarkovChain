@@ -1,6 +1,5 @@
 package uk.ac.imperial.utils;
 
-import com.google.common.base.Charsets;
 import com.google.common.hash.*;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
@@ -77,9 +76,9 @@ public final class StateUtils {
             @Override
             public void funnel(State from, PrimitiveSink into) {
                 for (String place : placeOrdering) {
-                    into.putBytes(place.getBytes());
+                    into.putInt(place.hashCode());
                     for (Map.Entry<String, Integer> entry : from.getTokens(place).entrySet()) {
-                        into.putBytes(entry.getKey().getBytes());
+                        into.putInt(entry.getKey().hashCode());
                         into.putInt(entry.getValue());
                     }
                 }
