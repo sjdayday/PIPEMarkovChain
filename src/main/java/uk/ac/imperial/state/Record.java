@@ -7,6 +7,35 @@ import java.util.Map;
  * in integer representation
  */
 public class Record {
+    /**
+     * State
+     */
+    public final int state;
+
+    /**
+     * States that the specified state field can transition to
+     * and the rate in which it enters them
+     */
+    public final Map<Integer, Double> successors;
+
+    /**
+     * Constructor storing a state and successor for future retrial
+     *
+     * @param state
+     * @param successors
+     */
+    public Record(int state, Map<Integer, Double> successors) {
+        this.state = state;
+        this.successors = successors;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = state;
+        result = 31 * result + successors.hashCode();
+        return result;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -26,33 +55,5 @@ public class Record {
         }
 
         return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = state;
-        result = 31 * result + successors.hashCode();
-        return result;
-    }
-
-    /**
-     * State
-     */
-    public final int state;
-
-    /**
-     * States that the specified state field can transition to
-     * and the rate in which it enters them
-     */
-    public final Map<Integer, Double> successors;
-
-    /**
-     * Constructor storing a state and successor for future retrial
-     * @param state
-     * @param successors
-     */
-    public Record(int state, Map<Integer, Double> successors) {
-        this.state = state;
-        this.successors = successors;
     }
 }

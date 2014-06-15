@@ -37,7 +37,6 @@ public final class KryoStateIO implements StateWriter, StateReader {
         kryo.register(Integer.class);
         kryo.register(Boolean.class);
         kryo.register(Map.class, new MapSerializer());
-        kryo.register(HashMap.class, new MapSerializer());
     }
 
 

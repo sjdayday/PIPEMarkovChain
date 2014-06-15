@@ -155,30 +155,26 @@ public final class ExploredSet {
     }
 
     /**
-     * Internal class for storing the secondary hash within the sets array
+     * Private class for the TreeMap in order to make a states hash codes comparable
      */
-    private static final class StateEntry implements Comparable<StateEntry> {
+    private static final class WrappedHash implements Comparable<WrappedHash>{
         /**
-         * Second hash of a state used to identify equality
+         * Secondary hash
          */
-        public final HashCode secondaryHash;
-
-        private StateEntry(HashCode secondaryHash) {
-            this.secondaryHash = secondaryHash;
-        }
+        private final HashCode hash;
 
         @Override
         public boolean equals(Object o) {
             if (this == o) {
                 return true;
             }
-            if (!(o instanceof StateEntry)) {
+            if (!(o instanceof WrappedHash)) {
                 return false;
             }
 
-            StateEntry that = (StateEntry) o;
+            WrappedHash that = (WrappedHash) o;
 
-            if (!secondaryHash.equals(that.secondaryHash)) {
+            if (!hash.equals(that.hash)) {
                 return false;
             }
 
@@ -187,35 +183,12 @@ public final class ExploredSet {
 
         @Override
         public int hashCode() {
-            return secondaryHash.hashCode();
+            return hash.hashCode();
         }
-
-        /**
-         * Compares secondary hashes integer representations against each other.
-         * Uses integer representation since the secondaryHash is currently a 32 bit hash code generator.
-         * If this is changed it could be a Long comparison.
-         * @param o
-         * @return comparison of secondary hashes
-         */
-        @Override
-        public int compareTo(StateEntry o) {
-            return Long.compare(o.secondaryHash.asLong(), secondaryHash.asLong());
-        }
-
-
-    }
-
-    /**
-     * Private class for the TreeMap in order to make a states hash codes comparable
-     */
-    private class WrappedHash implements Comparable<WrappedHash>{
-        /**
-         * Secondary hash
-         */
-        private final HashCode hash;
 
         /**
          * Constructor
+
          * @param hash secondary hash
          */
         private WrappedHash(HashCode hash) {

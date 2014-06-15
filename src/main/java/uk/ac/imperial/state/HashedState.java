@@ -35,21 +35,21 @@ public final class HashedState implements State {
      */
     public HashedState(Map<String, Map<String, Integer>> tokenCounts) {
         this.tokenCounts.putAll(tokenCounts);
-        hashOne = hashOne().asInt();
-        hashTwo = hashTwo();
+        hashOne = calculateHashOne().asInt();
+        hashTwo = calculateHashTwo();
     }
 
     /**
      * @return secondary hash of the state
      */
-    private HashCode hashTwo() {
+    private HashCode calculateHashTwo() {
         return StateUtils.hashCodeForState(this, StateUtils.getSecondaryHash());
     }
 
     /**
      * @return primary hash of the state
      */
-    private HashCode hashOne() {
+    private HashCode calculateHashOne() {
         return StateUtils.hashCodeForState(this, StateUtils.getPrimaryHash());
     }
 
