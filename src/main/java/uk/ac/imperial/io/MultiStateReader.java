@@ -4,6 +4,7 @@ import com.esotericsoftware.kryo.io.Input;
 import uk.ac.imperial.state.ClassifiedState;
 import uk.ac.imperial.state.Record;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 
@@ -16,7 +17,7 @@ public interface MultiStateReader {
      * @param input
      * @return state transitions in the input file
      */
-    Collection<Record> readRecords(Input input);
+    Collection<Record> readRecords(Input input) throws IOException;
 
     /**
      *

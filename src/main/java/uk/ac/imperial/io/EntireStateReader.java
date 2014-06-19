@@ -4,6 +4,7 @@ import com.esotericsoftware.kryo.io.Input;
 import uk.ac.imperial.state.ClassifiedState;
 import uk.ac.imperial.state.Record;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -34,7 +35,7 @@ public final class EntireStateReader implements MultiStateReader {
      * @return collection of records
      */
     @Override
-    public Collection<Record> readRecords(Input input) {
+    public Collection<Record> readRecords(Input input) throws IOException {
         Collection<Record> results = new ArrayList<>();
         while (!input.eof()) {
             Record record = reader.readRecord(input);

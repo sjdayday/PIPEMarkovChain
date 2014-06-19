@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class KryoStateIOTest {
     private KryoStateIO io;
@@ -78,6 +79,21 @@ public class KryoStateIOTest {
 
                 assertEquals(1, mapping.id);
                 assertEquals(state, mapping.state);
+            }
+        }
+    }
+
+    @Test
+    public void handlesBogusRead() throws IOException {
+        String bogus = "jfjashf;sjaah";
+        try (ByteArrayInputStream stream = new ByteArrayInputStream(bogus.getBytes());
+             Input input = new Input(stream)) {
+            try {
+                io.readRecord(input);
+                fail("Did not throw IOException!");
+
+            } catch (IOException ignored) {
+                //Pass
             }
         }
     }

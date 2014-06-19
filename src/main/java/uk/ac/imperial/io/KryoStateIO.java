@@ -1,11 +1,13 @@
 package uk.ac.imperial.io;
 
 import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.KryoException;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.MapSerializer;
 import uk.ac.imperial.state.*;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -89,19 +91,23 @@ public final class KryoStateIO implements StateWriter, StateReader {
      *      - Rate into Successor
      *     }
      *
-     * @param input Kryo intput to read from
+     * @param input Kryo input to read from
      */
     @Override
-    public Record readRecord(Input input) {
-        Integer state = kryo.readObject(input, Integer.class);
-        int successors = kryo.readObject(input, Integer.class);
-        Map<Integer, Double> successorRates = new HashMap<>();
-        for (int i = 0; i < successors; i++) {
-            Integer successor = kryo.readObject(input, Integer.class);
-            Double rate = kryo.readObject(input, Double.class);
-            successorRates.put(successor, rate);
+    public Record readRecord(Input input) throws IOException {
+        try {
+            Integer state = kryo.readObject(input, Integer.class);
+            int successors = kryo.readObject(input, Integer.class);
+            Map<Integer, Double> successorRates = new HashMap<>();
+            for (int i = 0; i < successors; i++) {
+                Integer successor = kryo.readObject(input, Integer.class);
+                Double rate = kryo.readObject(input, Double.class);
+                successorRates.put(successor, rate);
+            }
+            return new Record(state, successorRates);
+        } catch (KryoException e) {
+            throw  new IOException("Cannot read record", e);
         }
-        return new Record(state, successorRates);
     }
 
     /**
