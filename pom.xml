@@ -4,12 +4,12 @@
 
     <groupId>uk.ac.imperial</groupId>
     <artifactId>pipe-markov-chain</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2-SNAPSHOT</version>
 
 
     <scm>
         <developerConnection>scm:git:git@github.com:sarahtattersall/PIPEMarkovChain.git</developerConnection>
-      <tag>pipe-markov-chain-1.0.1</tag>
+      <tag>HEAD</tag>
   </scm>
 
 
