@@ -9,10 +9,9 @@
 
     <scm>
     	<!-- 
-    	   Used by maven release plugin.  
-    	   Add -Darguments=-Dgithub.site.repositoryOwner=yourGithubUserId to 
-    	   maven release plugin commands, e.g., 
-    	   -Darguments=-Dgithub.site.repositoryOwner=sarahtattersall release:prepare (or release:perform) 
+    	   Used by maven release plugin (prepare, not perform)   
+    	   Add -Dgithub.site.repositoryOwner=yourGithubUserId to maven release:prepare  
+    	   -Dgithub.site.repositoryOwner=sarahtattersall release:prepare
     	 -->
         <developerConnection>scm:git:git@github.com:${github.site.repositoryOwner}/PIPEMarkovChain.git</developerConnection>
       <tag>HEAD</tag>
@@ -89,7 +88,7 @@
 		    	   Used by maven release plugin, and as part of deploy phase.  
 		    	   For the release plugin, any command line arguments must be passed using -Darguments="args... "
 		    	   Add -Darguments=-Dgithub.site.repositoryOwner=yourGithubUserId to maven release commands, e.g., 
-			    	   -Darguments=-Dgithub.site.repositoryOwner=sarahtattersall release:prepare (or release:perform, or deploy)
+			    	   -Darguments=-Dgithub.site.repositoryOwner=sarahtattersall release:perform
 			       For the deploy phase, -Darguments is not needed:
 			       	   -Dgithub.site.repositoryOwner=sarahtattersall clean deploy  
 	        	 -->
