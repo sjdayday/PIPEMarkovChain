@@ -4,7 +4,7 @@
 
     <groupId>uk.ac.imperial</groupId>
     <artifactId>pipe-markov-chain</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.2</version>
 
 
     <scm>
@@ -15,7 +15,7 @@
     	   -Darguments=-Dgithub.site.repositoryOwner=sarahtattersall release:prepare (or release:perform) 
     	 -->
         <developerConnection>scm:git:git@github.com:${github.site.repositoryOwner}/PIPEMarkovChain.git</developerConnection>
-      <tag>HEAD</tag>
+      <tag>pipe-markov-chain--1.0.2</tag>
   </scm>
 
 
