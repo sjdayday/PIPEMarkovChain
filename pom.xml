@@ -10,8 +10,8 @@
     <scm>
     	<!-- 
     	   Used by maven release plugin (prepare, not perform)   
-    	   Add -Dgithub.site.repositoryOwner=yourGithubUserId to maven release:prepare  
-    	   -Dgithub.site.repositoryOwner=sarahtattersall release:prepare
+    	   Add -Dgithub.site.repositoryOwner=yourGithubUserId to maven release:prepare, e.g.,   
+    	   -Dgithub.site.repositoryOwner=sjdayday release:prepare
     	 -->
         <developerConnection>scm:git:git@github.com:${github.site.repositoryOwner}/PIPEMarkovChain.git</developerConnection>
       <tag>HEAD</tag>
@@ -86,11 +86,12 @@
             <plugin>
        	    	<!-- 
 		    	   Used by maven release plugin, and as part of deploy phase.  
-		    	   For the release plugin, any command line arguments must be passed using -Darguments="args... "
-		    	   Add -Darguments=-Dgithub.site.repositoryOwner=yourGithubUserId to maven release commands, e.g., 
-			    	   -Darguments=-Dgithub.site.repositoryOwner=sarahtattersall release:perform
-			       For the deploy phase, -Darguments is not needed:
-			       	   -Dgithub.site.repositoryOwner=sarahtattersall clean deploy  
+		    	   For release:perform, any command line arguments must be passed using -Darguments="args... "
+		    	   Add -Darguments=-Dgithub.site.repositoryOwner=yourGithubUserId to maven release:perform, e.g., 
+			    	   -Darguments=-Dgithub.site.repositoryOwner=sjdayday release:perform
+			       For release:prepare and the deploy phase, -Darguments is not needed:
+			           -Dgithub.site.repositoryOwner=sjdayday  release:prepare 
+			       	   -Dgithub.site.repositoryOwner=sjdayday clean deploy  
 	        	 -->
                 <groupId>com.github.github</groupId>
                 <artifactId>site-maven-plugin</artifactId>
@@ -102,7 +103,7 @@
                     <branch>refs/heads/mvn-repo</branch>                       <!-- remote branch name -->
                     <includes><include>**/*</include></includes>
                     <repositoryName>PIPEMarkovChain</repositoryName>      <!-- github repo name -->
-                    <repositoryOwner>${github.site.repositoryOwner}</repositoryOwner>    <!-- github username, was sarahtattersall  -->
+                    <repositoryOwner>${github.site.repositoryOwner}</repositoryOwner>    
                     <merge>true</merge> <!-- Keep all releases -->
                 </configuration>
                 <executions>
