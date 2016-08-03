@@ -23,10 +23,10 @@ public final class StateUtils {
 
     /**
      *
-     * @param jsonState json representation of a map place id -> {token id -> count}
+     * @param jsonState json representation of a map place id -&gt; {token id -&gt; count}
      *                  E.g. "{\"P0\" : { \"Default\" : 0, \"Red\" : 1 }, \"P1\" : { \"Default\" : 1, \"Red\" : 0 } }"
      * @return unclassified state from the json string representation
-     * @throws IOException
+     * @throws IOException if IO error occurs during read
      */
     public static State stateFromJson(String jsonState) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
@@ -38,10 +38,10 @@ public final class StateUtils {
 
     /**
      *
-     * @param jsonState json representation of a map place id -> {token id -> count}
+     * @param jsonState json representation of a map place id -&gt; {token id -&gt; count}
      *                  E.g. "{\"P0\" : { \"Default\" : 0, \"Red\" : 1 }, \"P1\" : { \"Default\" : 1, \"Red\" : 0 } }"
      * @return state from the json string representation that has been classified as vanishing
-     * @throws IOException
+     * @throws IOException if IO error occurs during read
      */
     public static ClassifiedState vanishingStateFromJson(String jsonState) throws IOException {
         State state = stateFromJson(jsonState);
@@ -50,10 +50,10 @@ public final class StateUtils {
 
     /**
      *
-     * @param jsonState json representation of a map place id -> {token id -> count}
+     * @param jsonState json representation of a map place id -&gt; {token id -&gt; count}
      *                  E.g. "{\"P0\" : { \"Default\" : 0, \"Red\" : 1 }, \"P1\" : { \"Default\" : 1, \"Red\" : 0 } }"
      * @return state from the json string representation that has been classified as tangible
-     * @throws IOException
+     * @throws IOException if IO error occurs during read
      */
     public static ClassifiedState tangibleStateFromJson(String jsonState) throws IOException {
         State state = stateFromJson(jsonState);
@@ -62,13 +62,15 @@ public final class StateUtils {
 
     /**
      * Funnel used to generate HashCode of ExplorerState
-     * <p/>
+     * <p>
      * Due to the behaviour of a HashMap, order is not guaranteed on objects
      * so we cannot loop through the map of the explorer state and add the
      * primitive types, because a differing order will generate a different hash code.
-     * <p/>
+     * </p><p>
      * It appears though that the map hash code method returns the same value
-     * no matter the order so this has been used here.
+     * no matter the order so this has been used here.</p>
+     * @param placeOrdering ordering of places in the state
+     * @return Funnel  
      */
     public static Funnel<State> getFunnel(final Collection<String> placeOrdering) {
 
@@ -106,7 +108,7 @@ public final class StateUtils {
     /**
      * Hashes the state using the specified funnel
      *
-     * @param state
+     * @param state to be hashed
      * @param hf    function to hash the state with
      * @return hash code for state using the specified hash function
      */
@@ -118,7 +120,7 @@ public final class StateUtils {
 
     /**
      *
-     * @param state
+     * @param state to be ordered
      * @return ordering based on sorting the places
      */
     private static List<String> getOrdering(State state) {

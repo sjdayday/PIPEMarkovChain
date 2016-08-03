@@ -12,16 +12,17 @@ public interface StateWriter {
 
     /**
      * Writes classified state transitions
-     * @param state
-     * @param successors
+     * @param state to be written
+     * @param successors transitions to be written
+     * @param output output to be written to
      */
     void writeTransitions(int state, Map<Integer, Double> successors, Output output);
 
     /**
      * Logs state to state id in output
-     * @param state
-     * @param stateId
-     * @param stateOutput
+     * @param state to be written
+     * @param stateId id of the state
+     * @param stateOutput output to be written to
      */
     void writeState(ClassifiedState state, int stateId, Output stateOutput);
 }

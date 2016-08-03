@@ -21,8 +21,8 @@ public class Record {
     /**
      * Constructor storing a state and successor for future retrial
      *
-     * @param state
-     * @param successors
+     * @param state for constructor
+     * @param successors for constructor
      */
     public Record(int state, Map<Integer, Double> successors) {
         this.state = state;

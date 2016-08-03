@@ -29,8 +29,8 @@ public final class HashedClassifiedState implements ClassifiedState {
     /**
      * Private constructor. Use factory methods
      *
-     * @param state
-     * @param tangible
+     * @param state for constructor
+     * @param tangible true if tangible
      */
     public HashedClassifiedState(State state, boolean tangible) {
         this.state = state;
@@ -38,7 +38,7 @@ public final class HashedClassifiedState implements ClassifiedState {
     }
 
     /**
-     * @param state
+     * @param state tangible state
      * @return new state that represents a tangible state with the following tokens
      */
     public static HashedClassifiedState tangibleState(State state) {
@@ -46,7 +46,7 @@ public final class HashedClassifiedState implements ClassifiedState {
     }
 
     /**
-     * @param state
+     * @param state vanishing state
      * @return new state that represents a vanishing state with the following tokens
      */
     public static HashedClassifiedState vanishingState(State state) {

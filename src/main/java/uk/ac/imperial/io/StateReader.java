@@ -13,15 +13,16 @@ public interface StateReader {
 
     /**
      * Read a single record from the input stream
-     * @param input
+     * @param input source
      * @return Record containing a state and all its successors
+     * @throws IOException if IO error occurs during the read
      */
     Record readRecord(Input input) throws IOException;
 
     /**
      * Reads a single state mapping from the input
      *
-     * @param inputStream
+     * @param inputStream stream
      * @return object containing the id and the state
      */
     StateMapping readState(Input inputStream);
