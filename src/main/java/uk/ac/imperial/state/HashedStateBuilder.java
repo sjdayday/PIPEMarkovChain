@@ -12,9 +12,9 @@ public final class HashedStateBuilder {
 
     /**
      * Adds the specified token and count to the place
-     * @param place
-     * @param token
-     * @param count
+     * @param place to be added
+     * @param token to be added
+     * @param count for the token
      * @return builder
      */
     public HashedStateBuilder placeWithToken(String place, String token, int count) {
@@ -26,8 +26,8 @@ public final class HashedStateBuilder {
     /**
      *
      * Adds all tokenValues to the place
-     * @param place
-     * @param tokenValues
+     * @param place to be added
+     * @param tokenValues all tokens and values for the place 
      * @return builder
      */
     public HashedStateBuilder placeWithTokens(String place, Map<String, Integer> tokenValues) {

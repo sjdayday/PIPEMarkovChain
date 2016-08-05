@@ -70,9 +70,9 @@ public final class KryoStateIO implements StateWriter, StateReader {
      * Writes the state and state id to the output in the order
      *   - State
      *   - id
-     * @param state
-     * @param stateId
-     * @param output
+     * @param state to write
+     * @param stateId id of the state
+     * @param output to write to
      */
     @Override
     public void writeState(ClassifiedState state, int stateId, Output output) {
@@ -115,7 +115,7 @@ public final class KryoStateIO implements StateWriter, StateReader {
      * Reads a single state mapping from the input stream. They are read in the order
      * that the method writeState writes them out.
      *
-     * @param inputStream
+     * @param inputStream to read from 
      * @return state mapping of id to actual state object
      */
     @Override

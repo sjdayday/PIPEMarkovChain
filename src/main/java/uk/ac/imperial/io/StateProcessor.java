@@ -24,8 +24,8 @@ public interface StateProcessor {
      *
      * Process the assigning of an id to a state
      *
-     * @param state
-     * @param stateId
+     * @param state to process
+     * @param stateId id of the state
      */
     void processState(ClassifiedState state, int stateId);
 

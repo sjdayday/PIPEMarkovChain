@@ -17,7 +17,7 @@ public final class HashedState implements State {
 
     /**
      * The token counts for the current State.
-     * Contains Place id -> {Token -> Integer count}
+     * Contains Place id -&gt; {Token -&gt; Integer count}
      */
     private Map<String, Map<String, Integer>> tokenCounts = new HashMap<>();
 
@@ -31,7 +31,7 @@ public final class HashedState implements State {
     /**
      * Constructor containing the counts for each place
      *
-     * @param tokenCounts
+     * @param tokenCounts for each place in the state
      */
     public HashedState(Map<String, Map<String, Integer>> tokenCounts) {
         this.tokenCounts.putAll(tokenCounts);
@@ -55,7 +55,7 @@ public final class HashedState implements State {
 
 
     /**
-     * @return a map representation of the state, mapping place id -> {token id -> count}
+     * @return a map representation of the state, mapping place id -&gt; {token id -&gt; count}
      */
     public Map<String, Map<String, Integer>> getTokenCounts() {
         return tokenCounts;
@@ -72,7 +72,7 @@ public final class HashedState implements State {
 
     /**
      * @param id Place id
-     * @return map token id -> counts for the given place in this state
+     * @return map token id -&gt;  counts for the given place in this state
      */
     @Override
     public Map<String, Integer> getTokens(String id) {

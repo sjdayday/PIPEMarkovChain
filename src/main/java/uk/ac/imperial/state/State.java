@@ -15,9 +15,10 @@ import java.util.Map;
  * P3 = 3
  * P4 = 1
  * P4 = 0
- * <p/>
+ * <p>
  * Then the state will be as follows:
- * (1, 2, 3, 1, 0)
+ * (1, 2, 3, 1, 0) 
+ * </p>
  */
 public interface State {
 

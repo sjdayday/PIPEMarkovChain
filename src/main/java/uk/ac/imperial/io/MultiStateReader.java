@@ -14,14 +14,15 @@ import java.util.Map;
 public interface MultiStateReader {
     /**
      *
-     * @param input
+     * @param input stream to evaluate
      * @return state transitions in the input file
+     * @throws IOException if IO error occurs during the read
      */
     Collection<Record> readRecords(Input input) throws IOException;
 
     /**
      *
-     * @param input
+     * @param input state file to evaluate
      * @return state mappings in the state file
      */
     Map<Integer, ClassifiedState> readStates(Input input);

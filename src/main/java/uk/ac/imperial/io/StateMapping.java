@@ -19,8 +19,8 @@ public class StateMapping {
 
     /**
      * Stores the state and id for retrieval later
-     * @param state
-     * @param id
+     * @param state to be stored
+     * @param id  of the state
      */
     public StateMapping(ClassifiedState state, int id) {
         this.state = state;
