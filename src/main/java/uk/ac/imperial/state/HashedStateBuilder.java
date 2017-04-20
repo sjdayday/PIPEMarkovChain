@@ -10,7 +10,17 @@ import java.util.Map;
 public final class HashedStateBuilder {
     private Map<String, Map<String, Integer>> tokenCounts = new HashMap<>();
 
-    /**
+    public HashedStateBuilder() {
+	}
+    
+    public HashedStateBuilder(HashedState state) {
+    	this();
+        for (String placeId : state.getPlaces()) {
+            placeWithTokens(placeId, state.getTokens(placeId));
+        }
+	}
+
+	/**
      * Adds the specified token and count to the place
      * @param place to be added
      * @param token to be added
