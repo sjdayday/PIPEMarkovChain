@@ -96,9 +96,24 @@ public class HashedStateBuilderTest {
         assertEquals(1, actualDefault);
         int actualRed = map.get("Red");
         assertEquals(6, actualRed);
-
     }
-
-
-
+    @Test
+    public void constructorFromState() {
+    	Map<String, Integer> tokens = new HashMap<>();
+    	tokens.put("Default", 1);
+    	tokens.put("Red", 6);
+    	builder.placeWithTokens("P1", tokens);
+    	HashedState state = builder.build();
+    	builder = new HashedStateBuilder(state);
+    	builder.placeWithToken("P2", "Blue", 3); 
+    	HashedState newState = builder.build(); 
+    	Map<String, Integer> map = newState.getTokens("P1");
+    	assertEquals("copied from previous state",2, map.size());
+    	int actualDefault = map.get("Default");
+    	assertEquals(1, actualDefault);
+    	int actualRed = map.get("Red");
+    	assertEquals(6, actualRed);
+    	Map<String, Integer> map2 = newState.getTokens("P2");
+    	assertEquals("added to state",3, (int) map2.get("Blue"));
+    }
 }
