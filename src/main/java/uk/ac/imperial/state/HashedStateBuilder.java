@@ -13,7 +13,7 @@ public final class HashedStateBuilder {
     public HashedStateBuilder() {
 	}
     
-    public HashedStateBuilder(HashedState state) {
+    public HashedStateBuilder(State state) {
     	this();
         for (String placeId : state.getPlaces()) {
             placeWithTokens(placeId, state.getTokens(placeId));

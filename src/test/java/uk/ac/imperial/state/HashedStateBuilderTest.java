@@ -116,7 +116,4 @@ public class HashedStateBuilderTest {
     	Map<String, Integer> map2 = newState.getTokens("P2");
     	assertEquals("added to state",3, (int) map2.get("Blue"));
     }
-
-
-
 }
