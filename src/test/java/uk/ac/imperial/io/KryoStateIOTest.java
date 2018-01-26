@@ -20,7 +20,6 @@ import static org.junit.Assert.fail;
 public class KryoStateIOTest {
     private KryoStateIO io;
 
-
     @Before
     public void setUp() {
         io = new KryoStateIO();
@@ -32,11 +31,11 @@ public class KryoStateIOTest {
         successors.put(2, 1.0);
 
         try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
-            try  (Output outputStream = new Output(stream)) {
+            try (Output outputStream = new Output(stream)) {
                 io.writeTransitions(1, successors, outputStream);
             }
             try (ByteArrayInputStream s = new ByteArrayInputStream(stream.toByteArray());
-                 Input inputStream = new Input(s)) {
+                    Input inputStream = new Input(s)) {
                 Record record = io.readRecord(inputStream);
 
                 assertEquals(1, record.state);
@@ -52,11 +51,11 @@ public class KryoStateIOTest {
         successors.put(3, 2.0);
 
         try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
-            try  (Output outputStream = new Output(stream)) {
+            try (Output outputStream = new Output(stream)) {
                 io.writeTransitions(1, successors, outputStream);
             }
             try (ByteArrayInputStream s = new ByteArrayInputStream(stream.toByteArray());
-                 Input inputStream = new Input(s)) {
+                    Input inputStream = new Input(s)) {
                 Record record = io.readRecord(inputStream);
 
                 assertEquals(1, record.state);
@@ -67,14 +66,14 @@ public class KryoStateIOTest {
 
     @Test
     public void writesState() throws IOException {
-        ClassifiedState state =
-            StateUtils.tangibleStateFromJson("{\"P0\": {\"Default\": 1}, \"P1\": {\"Default\": 0}}");
+        ClassifiedState state = StateUtils
+                .tangibleStateFromJson("{\"P0\": {\"Default\": 1}, \"P1\": {\"Default\": 0}}");
         try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
-            try  (Output outputStream = new Output(stream)) {
+            try (Output outputStream = new Output(stream)) {
                 io.writeState(state, 1, outputStream);
             }
             try (ByteArrayInputStream s = new ByteArrayInputStream(stream.toByteArray());
-                 Input inputStream = new Input(s)) {
+                    Input inputStream = new Input(s)) {
                 StateMapping mapping = io.readState(inputStream);
 
                 assertEquals(1, mapping.id);
@@ -87,7 +86,7 @@ public class KryoStateIOTest {
     public void handlesBogusRead() throws IOException {
         String bogus = "jfjashf;sjaah";
         try (ByteArrayInputStream stream = new ByteArrayInputStream(bogus.getBytes());
-             Input input = new Input(stream)) {
+                Input input = new Input(stream)) {
             try {
                 io.readRecord(input);
                 fail("Did not throw IOException!");
@@ -97,6 +96,5 @@ public class KryoStateIOTest {
             }
         }
     }
-
 
 }

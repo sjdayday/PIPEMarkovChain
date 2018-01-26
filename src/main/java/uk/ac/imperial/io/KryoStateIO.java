@@ -41,7 +41,6 @@ public final class KryoStateIO implements StateWriter, StateReader {
         kryo.register(Map.class, new MapSerializer());
     }
 
-
     /**
      *
      * Writes:
@@ -106,7 +105,7 @@ public final class KryoStateIO implements StateWriter, StateReader {
             }
             return new Record(state, successorRates);
         } catch (KryoException e) {
-            throw  new IOException("Cannot read record", e);
+            throw new IOException("Cannot read record", e);
         }
     }
 
@@ -127,7 +126,7 @@ public final class KryoStateIO implements StateWriter, StateReader {
         State state = new HashedState(map);
         ClassifiedState classifiedState;
         if (tangible) {
-            classifiedState= HashedClassifiedState.tangibleState(state);
+            classifiedState = HashedClassifiedState.tangibleState(state);
         } else {
             classifiedState = HashedClassifiedState.vanishingState(state);
         }

@@ -28,7 +28,6 @@ public final class ExploredSet {
      */
     private final List<TreeMap<WrappedHash, Integer>> array;
 
-
     /**
      * Number of items in set
      */
@@ -149,7 +148,7 @@ public final class ExploredSet {
      */
     public int getId(ClassifiedState state) {
         int location = getLocation(state);
-//        int value = hashTwo(state);
+        //        int value = hashTwo(state);
         TreeMap<WrappedHash, Integer> structure = array.get(location);
         WrappedHash wrappedHash = new WrappedHash(state.secondaryHash());
         return structure.get(wrappedHash);
@@ -158,7 +157,7 @@ public final class ExploredSet {
     /**
      * Private class for the TreeMap in order to make a states hash codes comparable
      */
-    private static final class WrappedHash implements Comparable<WrappedHash>{
+    private static final class WrappedHash implements Comparable<WrappedHash> {
         /**
          * Secondary hash
          */
@@ -189,7 +188,7 @@ public final class ExploredSet {
 
         /**
          * Constructor
-
+        
          * @param hash secondary hash
          */
         private WrappedHash(HashCode hash) {

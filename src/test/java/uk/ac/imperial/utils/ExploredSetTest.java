@@ -114,8 +114,7 @@ public class ExploredSetTest {
      */
     @Test
     public void containsLargeState() throws IOException {
-        String jsonValue =
-                "{\"P12\": {\"Default\": 0}, \"P11\": {\"Default\": 1}, \"P14\": {\"Default\": 1}, \"P13\": {\"Default\": 0}, \"P9\": {\"Default\": 0}, \"P16\": {\"Default\": 1}, \"P15\": {\"Default\": 0}, \"P8\": {\"Default\": 1}, \"P17\": {\"Default\": 0}, \"P5\": {\"Default\": 0}, \"P4\": {\"Default\": 0}, \"P7\": {\"Default\": 0}, \"P6\": {\"Default\": 0}, \"P1\": {\"Default\": 0}, \"P0\": {\"Default\": 1}, \"P3\": {\"Default\": 0}, \"P2\": {\"Default\": 1}, \"P10\": {\"Default\": 0}}";
+        String jsonValue = "{\"P12\": {\"Default\": 0}, \"P11\": {\"Default\": 1}, \"P14\": {\"Default\": 1}, \"P13\": {\"Default\": 0}, \"P9\": {\"Default\": 0}, \"P16\": {\"Default\": 1}, \"P15\": {\"Default\": 0}, \"P8\": {\"Default\": 1}, \"P17\": {\"Default\": 0}, \"P5\": {\"Default\": 0}, \"P4\": {\"Default\": 0}, \"P7\": {\"Default\": 0}, \"P6\": {\"Default\": 0}, \"P1\": {\"Default\": 0}, \"P0\": {\"Default\": 1}, \"P3\": {\"Default\": 0}, \"P2\": {\"Default\": 1}, \"P10\": {\"Default\": 0}}";
         ClassifiedState state = StateUtils.tangibleStateFromJson(jsonValue);
 
         set = new ExploredSet(10);
@@ -131,8 +130,10 @@ public class ExploredSetTest {
      */
     @Test
     public void similarStates() throws IOException {
-        ClassifiedState state = StateUtils.tangibleStateFromJson("{\"P1\": {\"Default\": 1}, \"P0\": {\"Default\": 0}, \"P3\": {\"Default\": 0}, \"P2\": {\"Default\": 1}}");
-        ClassifiedState state2 = StateUtils.tangibleStateFromJson("{\"P1\": {\"Default\": 0}, \"P0\": {\"Default\": 1}, \"P3\": {\"Default\": 1}, \"P2\": {\"Default\": 0}}");
+        ClassifiedState state = StateUtils
+                .tangibleStateFromJson("{\"P1\": {\"Default\": 1}, \"P0\": {\"Default\": 0}, \"P3\": {\"Default\": 0}, \"P2\": {\"Default\": 1}}");
+        ClassifiedState state2 = StateUtils
+                .tangibleStateFromJson("{\"P1\": {\"Default\": 0}, \"P0\": {\"Default\": 1}, \"P3\": {\"Default\": 1}, \"P2\": {\"Default\": 0}}");
 
         set = new ExploredSet(10);
         set.add(state, 1);
@@ -141,15 +142,17 @@ public class ExploredSetTest {
 
     @Test
     public void idProblems() throws IOException {
-       ClassifiedState state = StateUtils.tangibleStateFromJson( "{\"P0\" : { \"Default\" : 0, \"Red\" : 1 }, \"P1\" : { \"Default\" : 1, \"Red\" : 0 } }");
-       ClassifiedState state2 = StateUtils.tangibleStateFromJson( "{\"P0\" : { \"Default\" : 1, \"Red\" : 0 }, \"P1\" : { \"Default\" : 0, \"Red\" : 1 } }");
+        ClassifiedState state = StateUtils
+                .tangibleStateFromJson("{\"P0\" : { \"Default\" : 0, \"Red\" : 1 }, \"P1\" : { \"Default\" : 1, \"Red\" : 0 } }");
+        ClassifiedState state2 = StateUtils
+                .tangibleStateFromJson("{\"P0\" : { \"Default\" : 1, \"Red\" : 0 }, \"P1\" : { \"Default\" : 0, \"Red\" : 1 } }");
 
-       set = new ExploredSet(10);
-       set.add(state, 1);
-       set.add(state2, 2);
+        set = new ExploredSet(10);
+        set.add(state, 1);
+        set.add(state2, 2);
 
-       assertEquals(1, set.getId(state));
-       assertEquals(2, set.getId(state2));
+        assertEquals(1, set.getId(state));
+        assertEquals(2, set.getId(state2));
 
     }
 
@@ -177,7 +180,6 @@ public class ExploredSetTest {
         assertEquals(1, set.size());
     }
 
-
     @Test
     public void manyItems() {
         set = new ExploredSet(10);
@@ -203,7 +205,6 @@ public class ExploredSetTest {
         assertEquals(1, set.size());
     }
 
-
     @Test
     public void duplicateItemDifferentId() {
         set = new ExploredSet(10);
@@ -215,8 +216,10 @@ public class ExploredSetTest {
 
     @Test
     public void containsComplex300007() throws IOException {
-        ClassifiedState state = StateUtils.tangibleStateFromJson("{\"P28\": {\"Default\": 0}, \"P29\": {\"Default\": 0}, \"P26\": {\"Default\": 0}, \"P27\": {\"Default\": 0}, \"P24\": {\"Default\": 1}, \"P25\": {\"Default\": 0}, \"P22\": {\"Default\": 0}, \"P23\": {\"Default\": 1}, \"P21\": {\"Default\": 0}, \"P20\": {\"Default\": 0}, \"P12\": {\"Default\": 0}, \"P11\": {\"Default\": 0}, \"P14\": {\"Default\": 0}, \"P13\": {\"Default\": 1}, \"P16\": {\"Default\": 0}, \"P9\": {\"Default\": 0}, \"P8\": {\"Default\": 0}, \"P15\": {\"Default\": 0}, \"P18\": {\"Default\": 0}, \"P17\": {\"Default\": 0}, \"P5\": {\"Default\": 0}, \"P4\": {\"Default\": 0}, \"P19\": {\"Default\": 0}, \"P7\": {\"Default\": 0}, \"P6\": {\"Default\": 0}, \"P1\": {\"Default\": 0}, \"P33\": {\"Default\": 0}, \"P0\": {\"Default\": 1}, \"P34\": {\"Default\": 0}, \"P3\": {\"Default\": 0}, \"P2\": {\"Default\": 0}, \"P30\": {\"Default\": 0}, \"P32\": {\"Default\": 1}, \"P31\": {\"Default\": 0}, \"P10\": {\"Default\": 0}}");
-        ClassifiedState state2 =  StateUtils.tangibleStateFromJson("{\"P28\": {\"Default\": 0}, \"P29\": {\"Default\": 0}, \"P26\": {\"Default\": 1}, \"P27\": {\"Default\": 0}, \"P24\": {\"Default\": 0}, \"P25\": {\"Default\": 0}, \"P22\": {\"Default\": 0}, \"P23\": {\"Default\": 0}, \"P21\": {\"Default\": 0}, \"P20\": {\"Default\": 0}, \"P12\": {\"Default\": 0}, \"P11\": {\"Default\": 0}, \"P14\": {\"Default\": 1}, \"P13\": {\"Default\": 0}, \"P9\": {\"Default\": 0}, \"P16\": {\"Default\": 0}, \"P15\": {\"Default\": 0}, \"P8\": {\"Default\": 0}, \"P18\": {\"Default\": 1}, \"P17\": {\"Default\": 0}, \"P5\": {\"Default\": 0}, \"P19\": {\"Default\": 0}, \"P4\": {\"Default\": 0}, \"P7\": {\"Default\": 0}, \"P6\": {\"Default\": 0}, \"P1\": {\"Default\": 1}, \"P33\": {\"Default\": 0}, \"P0\": {\"Default\": 0}, \"P34\": {\"Default\": 1}, \"P3\": {\"Default\": 0}, \"P2\": {\"Default\": 0}, \"P30\": {\"Default\": 0}, \"P32\": {\"Default\": 0}, \"P31\": {\"Default\": 0}, \"P10\": {\"Default\": 0}}");
+        ClassifiedState state = StateUtils
+                .tangibleStateFromJson("{\"P28\": {\"Default\": 0}, \"P29\": {\"Default\": 0}, \"P26\": {\"Default\": 0}, \"P27\": {\"Default\": 0}, \"P24\": {\"Default\": 1}, \"P25\": {\"Default\": 0}, \"P22\": {\"Default\": 0}, \"P23\": {\"Default\": 1}, \"P21\": {\"Default\": 0}, \"P20\": {\"Default\": 0}, \"P12\": {\"Default\": 0}, \"P11\": {\"Default\": 0}, \"P14\": {\"Default\": 0}, \"P13\": {\"Default\": 1}, \"P16\": {\"Default\": 0}, \"P9\": {\"Default\": 0}, \"P8\": {\"Default\": 0}, \"P15\": {\"Default\": 0}, \"P18\": {\"Default\": 0}, \"P17\": {\"Default\": 0}, \"P5\": {\"Default\": 0}, \"P4\": {\"Default\": 0}, \"P19\": {\"Default\": 0}, \"P7\": {\"Default\": 0}, \"P6\": {\"Default\": 0}, \"P1\": {\"Default\": 0}, \"P33\": {\"Default\": 0}, \"P0\": {\"Default\": 1}, \"P34\": {\"Default\": 0}, \"P3\": {\"Default\": 0}, \"P2\": {\"Default\": 0}, \"P30\": {\"Default\": 0}, \"P32\": {\"Default\": 1}, \"P31\": {\"Default\": 0}, \"P10\": {\"Default\": 0}}");
+        ClassifiedState state2 = StateUtils
+                .tangibleStateFromJson("{\"P28\": {\"Default\": 0}, \"P29\": {\"Default\": 0}, \"P26\": {\"Default\": 1}, \"P27\": {\"Default\": 0}, \"P24\": {\"Default\": 0}, \"P25\": {\"Default\": 0}, \"P22\": {\"Default\": 0}, \"P23\": {\"Default\": 0}, \"P21\": {\"Default\": 0}, \"P20\": {\"Default\": 0}, \"P12\": {\"Default\": 0}, \"P11\": {\"Default\": 0}, \"P14\": {\"Default\": 1}, \"P13\": {\"Default\": 0}, \"P9\": {\"Default\": 0}, \"P16\": {\"Default\": 0}, \"P15\": {\"Default\": 0}, \"P8\": {\"Default\": 0}, \"P18\": {\"Default\": 1}, \"P17\": {\"Default\": 0}, \"P5\": {\"Default\": 0}, \"P19\": {\"Default\": 0}, \"P4\": {\"Default\": 0}, \"P7\": {\"Default\": 0}, \"P6\": {\"Default\": 0}, \"P1\": {\"Default\": 1}, \"P33\": {\"Default\": 0}, \"P0\": {\"Default\": 0}, \"P34\": {\"Default\": 1}, \"P3\": {\"Default\": 0}, \"P2\": {\"Default\": 0}, \"P30\": {\"Default\": 0}, \"P32\": {\"Default\": 0}, \"P31\": {\"Default\": 0}, \"P10\": {\"Default\": 0}}");
         set = new ExploredSet(300007);
         set.add(state, 1);
         assertFalse(set.contains(state2));
@@ -224,8 +227,10 @@ public class ExploredSetTest {
 
     @Test
     public void containsComplex358591() throws IOException {
-        ClassifiedState state = StateUtils.tangibleStateFromJson("{\"P28\": {\"Default\": 0}, \"P29\": {\"Default\": 0}, \"P26\": {\"Default\": 0}, \"P27\": {\"Default\": 0}, \"P24\": {\"Default\": 1}, \"P25\": {\"Default\": 0}, \"P22\": {\"Default\": 0}, \"P23\": {\"Default\": 1}, \"P21\": {\"Default\": 0}, \"P20\": {\"Default\": 0}, \"P12\": {\"Default\": 0}, \"P11\": {\"Default\": 0}, \"P14\": {\"Default\": 0}, \"P13\": {\"Default\": 1}, \"P16\": {\"Default\": 0}, \"P9\": {\"Default\": 0}, \"P8\": {\"Default\": 0}, \"P15\": {\"Default\": 0}, \"P18\": {\"Default\": 0}, \"P17\": {\"Default\": 0}, \"P5\": {\"Default\": 0}, \"P4\": {\"Default\": 0}, \"P19\": {\"Default\": 0}, \"P7\": {\"Default\": 0}, \"P6\": {\"Default\": 0}, \"P1\": {\"Default\": 0}, \"P33\": {\"Default\": 0}, \"P0\": {\"Default\": 1}, \"P34\": {\"Default\": 0}, \"P3\": {\"Default\": 0}, \"P2\": {\"Default\": 0}, \"P30\": {\"Default\": 0}, \"P32\": {\"Default\": 1}, \"P31\": {\"Default\": 0}, \"P10\": {\"Default\": 0}}");
-        ClassifiedState state2 =  StateUtils.tangibleStateFromJson("{\"P28\": {\"Default\": 0}, \"P29\": {\"Default\": 0}, \"P26\": {\"Default\": 1}, \"P27\": {\"Default\": 0}, \"P24\": {\"Default\": 0}, \"P25\": {\"Default\": 0}, \"P22\": {\"Default\": 0}, \"P23\": {\"Default\": 0}, \"P21\": {\"Default\": 0}, \"P20\": {\"Default\": 0}, \"P12\": {\"Default\": 0}, \"P11\": {\"Default\": 0}, \"P14\": {\"Default\": 1}, \"P13\": {\"Default\": 0}, \"P9\": {\"Default\": 0}, \"P16\": {\"Default\": 0}, \"P15\": {\"Default\": 0}, \"P8\": {\"Default\": 0}, \"P18\": {\"Default\": 1}, \"P17\": {\"Default\": 0}, \"P5\": {\"Default\": 0}, \"P19\": {\"Default\": 0}, \"P4\": {\"Default\": 0}, \"P7\": {\"Default\": 0}, \"P6\": {\"Default\": 0}, \"P1\": {\"Default\": 1}, \"P33\": {\"Default\": 0}, \"P0\": {\"Default\": 0}, \"P34\": {\"Default\": 1}, \"P3\": {\"Default\": 0}, \"P2\": {\"Default\": 0}, \"P30\": {\"Default\": 0}, \"P32\": {\"Default\": 0}, \"P31\": {\"Default\": 0}, \"P10\": {\"Default\": 0}}");
+        ClassifiedState state = StateUtils
+                .tangibleStateFromJson("{\"P28\": {\"Default\": 0}, \"P29\": {\"Default\": 0}, \"P26\": {\"Default\": 0}, \"P27\": {\"Default\": 0}, \"P24\": {\"Default\": 1}, \"P25\": {\"Default\": 0}, \"P22\": {\"Default\": 0}, \"P23\": {\"Default\": 1}, \"P21\": {\"Default\": 0}, \"P20\": {\"Default\": 0}, \"P12\": {\"Default\": 0}, \"P11\": {\"Default\": 0}, \"P14\": {\"Default\": 0}, \"P13\": {\"Default\": 1}, \"P16\": {\"Default\": 0}, \"P9\": {\"Default\": 0}, \"P8\": {\"Default\": 0}, \"P15\": {\"Default\": 0}, \"P18\": {\"Default\": 0}, \"P17\": {\"Default\": 0}, \"P5\": {\"Default\": 0}, \"P4\": {\"Default\": 0}, \"P19\": {\"Default\": 0}, \"P7\": {\"Default\": 0}, \"P6\": {\"Default\": 0}, \"P1\": {\"Default\": 0}, \"P33\": {\"Default\": 0}, \"P0\": {\"Default\": 1}, \"P34\": {\"Default\": 0}, \"P3\": {\"Default\": 0}, \"P2\": {\"Default\": 0}, \"P30\": {\"Default\": 0}, \"P32\": {\"Default\": 1}, \"P31\": {\"Default\": 0}, \"P10\": {\"Default\": 0}}");
+        ClassifiedState state2 = StateUtils
+                .tangibleStateFromJson("{\"P28\": {\"Default\": 0}, \"P29\": {\"Default\": 0}, \"P26\": {\"Default\": 1}, \"P27\": {\"Default\": 0}, \"P24\": {\"Default\": 0}, \"P25\": {\"Default\": 0}, \"P22\": {\"Default\": 0}, \"P23\": {\"Default\": 0}, \"P21\": {\"Default\": 0}, \"P20\": {\"Default\": 0}, \"P12\": {\"Default\": 0}, \"P11\": {\"Default\": 0}, \"P14\": {\"Default\": 1}, \"P13\": {\"Default\": 0}, \"P9\": {\"Default\": 0}, \"P16\": {\"Default\": 0}, \"P15\": {\"Default\": 0}, \"P8\": {\"Default\": 0}, \"P18\": {\"Default\": 1}, \"P17\": {\"Default\": 0}, \"P5\": {\"Default\": 0}, \"P19\": {\"Default\": 0}, \"P4\": {\"Default\": 0}, \"P7\": {\"Default\": 0}, \"P6\": {\"Default\": 0}, \"P1\": {\"Default\": 1}, \"P33\": {\"Default\": 0}, \"P0\": {\"Default\": 0}, \"P34\": {\"Default\": 1}, \"P3\": {\"Default\": 0}, \"P2\": {\"Default\": 0}, \"P30\": {\"Default\": 0}, \"P32\": {\"Default\": 0}, \"P31\": {\"Default\": 0}, \"P10\": {\"Default\": 0}}");
         set = new ExploredSet(358591);
         set.add(state, 1);
         assertFalse(set.contains(state2));

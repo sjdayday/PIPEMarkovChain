@@ -5,7 +5,6 @@ import uk.ac.imperial.state.Record;
 
 import java.io.IOException;
 
-
 /**
  * State reader reads a single record from the input stream
  */
