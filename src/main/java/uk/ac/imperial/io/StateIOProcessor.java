@@ -25,7 +25,6 @@ public final class StateIOProcessor implements StateProcessor {
      */
     private Output stateOutput;
 
-
     /**
      *
      * @param writer state writer that will write to the given output streams

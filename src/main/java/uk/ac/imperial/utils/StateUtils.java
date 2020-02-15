@@ -19,7 +19,8 @@ public final class StateUtils {
     /**
      * Private constrictor for utility class
      */
-    private StateUtils() {}
+    private StateUtils() {
+    }
 
     /**
      *
@@ -30,8 +31,8 @@ public final class StateUtils {
      */
     public static State stateFromJson(String jsonState) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        Map<String, Map<String, Integer>> map =
-                mapper.readValue(jsonState, new TypeReference<HashMap<String, HashMap<String, Integer>>>() {
+        Map<String, Map<String, Integer>> map = mapper
+                .readValue(jsonState, new TypeReference<HashMap<String, HashMap<String, Integer>>>() {
                 });
         return new HashedState(map);
     }
@@ -101,9 +102,8 @@ public final class StateUtils {
      * @return secondary hash function to be used
      */
     public static HashFunction getSecondaryHash() {
-        return  Hashing.murmur3_128();
+        return Hashing.murmur3_128();
     }
-
 
     /**
      * Hashes the state using the specified funnel
@@ -128,6 +128,5 @@ public final class StateUtils {
         Collections.sort(placeOrdering);
         return placeOrdering;
     }
-
 
 }

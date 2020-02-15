@@ -37,7 +37,7 @@ public class EntireStateReaderTest {
                 kryoIo.writeTransitions(1, successors, outputStream);
             }
             try (ByteArrayInputStream s = new ByteArrayInputStream(stream.toByteArray());
-                 Input inputStream = new Input(s)) {
+                    Input inputStream = new Input(s)) {
                 Collection<Record> records = reader.readRecords(inputStream);
                 assertEquals(1, records.size());
 
@@ -62,14 +62,13 @@ public class EntireStateReaderTest {
                 kryoIo.writeTransitions(2, successors2, outputStream);
             }
             try (ByteArrayInputStream s = new ByteArrayInputStream(stream.toByteArray());
-                 Input inputStream = new Input(s)) {
+                    Input inputStream = new Input(s)) {
                 List<Record> records = new LinkedList<>(reader.readRecords(inputStream));
                 assertEquals(2, records.size());
 
                 Record record = records.get(0);
                 assertEquals(1, record.state);
                 assertEquals(successors, record.successors);
-
 
                 Record record2 = records.get(1);
                 assertEquals(2, record2.state);
@@ -80,15 +79,15 @@ public class EntireStateReaderTest {
 
     @Test
     public void readState() throws IOException {
-        ClassifiedState state =
-                StateUtils.tangibleStateFromJson("{\"P0\": {\"Default\": 1}, \"P1\": {\"Default\": 0}}");
+        ClassifiedState state = StateUtils
+                .tangibleStateFromJson("{\"P0\": {\"Default\": 1}, \"P1\": {\"Default\": 0}}");
 
         try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
             try (Output outputStream = new Output(stream)) {
                 kryoIo.writeState(state, 1, outputStream);
             }
             try (ByteArrayInputStream s = new ByteArrayInputStream(stream.toByteArray());
-                 Input inputStream = new Input(s)) {
+                    Input inputStream = new Input(s)) {
                 Map<Integer, ClassifiedState> mappings = reader.readStates(inputStream);
                 assertEquals(1, mappings.size());
                 assertEquals(state, mappings.get(1));
@@ -96,13 +95,12 @@ public class EntireStateReaderTest {
         }
     }
 
-
     @Test
     public void twoStates() throws IOException {
-        ClassifiedState state =
-                StateUtils.tangibleStateFromJson("{\"P0\": {\"Default\": 1}, \"P1\": {\"Default\": 0}}");
-        ClassifiedState state2 =
-                StateUtils.tangibleStateFromJson("{\"P0\": {\"Default\": 0}, \"P1\": {\"Default\": 1}}");
+        ClassifiedState state = StateUtils
+                .tangibleStateFromJson("{\"P0\": {\"Default\": 1}, \"P1\": {\"Default\": 0}}");
+        ClassifiedState state2 = StateUtils
+                .tangibleStateFromJson("{\"P0\": {\"Default\": 0}, \"P1\": {\"Default\": 1}}");
 
         try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
             try (Output outputStream = new Output(stream)) {
@@ -110,7 +108,7 @@ public class EntireStateReaderTest {
                 kryoIo.writeState(state2, 2, outputStream);
             }
             try (ByteArrayInputStream s = new ByteArrayInputStream(stream.toByteArray());
-                 Input inputStream = new Input(s)) {
+                    Input inputStream = new Input(s)) {
                 Map<Integer, ClassifiedState> mappings = reader.readStates(inputStream);
                 assertEquals(2, mappings.size());
                 assertEquals(state, mappings.get(1));

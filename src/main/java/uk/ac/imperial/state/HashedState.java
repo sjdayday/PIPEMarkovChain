@@ -21,7 +21,6 @@ public final class HashedState implements State {
      */
     private Map<String, Map<String, Integer>> tokenCounts = new HashMap<>();
 
-
     /**
      * Empty constructor for Java bean needed to marshal object
      */
@@ -52,7 +51,6 @@ public final class HashedState implements State {
     private HashCode calculateHashOne() {
         return StateUtils.hashCodeForState(this, StateUtils.getPrimaryHash());
     }
-
 
     /**
      * @return a map representation of the state, mapping place id -&gt; {token id -&gt; count}

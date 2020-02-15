@@ -22,7 +22,6 @@ import java.util.Map;
  */
 public interface State {
 
-
     /**
      * @param id Place id
      * @return number of tokens for the place with the given id
