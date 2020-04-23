@@ -1,15 +1,31 @@
 package uk.ac.imperial.utils;
 
-import com.google.common.hash.*;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
+import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
+import com.google.common.hash.Funnel;
+import com.google.common.hash.HashCode;
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hashing;
+import com.google.common.hash.PrimitiveSink;
+
 import uk.ac.imperial.state.ClassifiedState;
 import uk.ac.imperial.state.HashedClassifiedState;
 import uk.ac.imperial.state.HashedState;
 import uk.ac.imperial.state.State;
-
-import java.io.IOException;
-import java.util.*;
 
 /**
  * Utility class for building states from Json strings
@@ -30,11 +46,46 @@ public final class StateUtils {
      * @throws IOException if IO error occurs during read
      */
     public static State stateFromJson(String jsonState) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        Map<String, Map<String, Integer>> map = mapper
-                .readValue(jsonState, new TypeReference<HashMap<String, HashMap<String, Integer>>>() {
-                });
+        // address cve: CVE-2017-7525 https://medium.com/@cowtowncoder/jackson-2-10-features-cd880674d8a2
+        PolymorphicTypeValidator ptv = BasicPolymorphicTypeValidator.builder()
+                .build();
+        ObjectMapper mapper = JsonMapper.builder()
+                .activateDefaultTyping(ptv, DefaultTyping.NON_FINAL)
+                .build();
+        JsonNode node = mapper.readTree(jsonState);
+        Map<String, Map<String, Integer>> map = buildStateMap(node);
         return new HashedState(map);
+    }
+
+    private static Map<String, Map<String, Integer>> buildStateMap(JsonNode node) {
+        Map<String, Map<String, Integer>> map = new HashMap<>();
+        Iterator<Entry<String, JsonNode>> it = node.fields();
+        JsonNode countsNode = null;
+        Map<String, Integer> countmap = null;
+        Entry<String, JsonNode> placeEntry = null;
+        String placeId = null;
+        while (it.hasNext()) {
+            placeEntry = it.next();
+            placeId = placeEntry.getKey();
+            countsNode = placeEntry.getValue();
+            countmap = buildCountsForCurrentPlace(countsNode);
+            map.put(placeId, countmap);
+        }
+        return map;
+    }
+
+    private static Map<String, Integer> buildCountsForCurrentPlace(JsonNode counts) {
+        Iterator<Entry<String, JsonNode>> countfields = counts.fields();
+        Map<String, Integer> countmap = new HashMap<>();
+        Entry<String, JsonNode> countEntry;
+        String token = null;
+        while (countfields.hasNext()) {
+            countEntry = countfields.next();
+            token = countEntry.getKey();
+            int count = countEntry.getValue().asInt();
+            countmap.put(token, count);
+        }
+        return countmap;
     }
 
     /**
@@ -71,7 +122,7 @@ public final class StateUtils {
      * It appears though that the map hash code method returns the same value
      * no matter the order so this has been used here.</p>
      * @param placeOrdering ordering of places in the state
-     * @return Funnel  
+     * @return Funnel
      */
     public static Funnel<State> getFunnel(final Collection<String> placeOrdering) {
 
